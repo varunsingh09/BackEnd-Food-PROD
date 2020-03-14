@@ -84,7 +84,7 @@ router.post('/ItemServingDays', async (req, res, next) => {
     });
     let servingdaysRsponse = await servingdays.save();
 
-    console.log("--->>",servingdaysRsponse)
+    //console.log("--->>",servingdaysRsponse)
     return res.status(200).json({ success: [{ 'msg': 'Serving days save successfully.' }] });
 
   } catch (error) {
