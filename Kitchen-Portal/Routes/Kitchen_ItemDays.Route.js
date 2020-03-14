@@ -13,8 +13,8 @@ const {CaptureErrorsSchema} = require('./../../Common-Model-Routes/Models/Error.
 
 
 router.post('/ItemServingDays', async (req, res, next) => {
-  //console.log(req.body.item_type.length,"===",req.body.serving_days.length)
-  let item_type = req.body.item_type.length <= 2 ? req.body.item_type[0] : req.body.item_type
+  console.log(req.body.item_type.length)
+  let item_type = req.body.item_type.length != 10 ? req.body.item_type[0] : req.body.item_type
 
   try {
 
@@ -46,7 +46,7 @@ router.post('/ItemServingDays', async (req, res, next) => {
     }
 
     
-    if (req.body.item_type.length > 4 && item_type !== "MainCourse") {
+    if (req.body.item_type.length != 10 && item_type !== "MainCourse") {
       return res.status(200).json({ errors: [{ 'msg': 'Item 3 days per week from one kitchen' }] });
     }
 
