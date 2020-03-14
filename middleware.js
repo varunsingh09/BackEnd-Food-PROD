@@ -87,7 +87,7 @@ module.exports = {
 
 
 
-    serving_zipcodes:['60076','60645',]
+    serving_zipcodes:[60076,60645,]
     
 }
 
