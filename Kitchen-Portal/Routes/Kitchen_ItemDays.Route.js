@@ -6,105 +6,114 @@ const { KitchenItemServingDays } = require('./../../Kitchen-Portal/Models/Kitche
 //const { MasterAdminSignupSchema } = require('./../Models/Master_SignupSignin.Model');
 const { ProductSchema } = require('./../../MasterAdmin-Portal/Models/MProduct.model');
 
-
+const {CaptureErrorsSchema} = require('./../../Common-Model-Routes/Models/Error.model');
 
 // This API is to store Kitchen product serving days 
 // This is incomplete has to be tested
 
 
-  router.post('/ItemServingDays', async (req, res, next) => {
+router.post('/ItemServingDays', async (req, res, next) => {
+  //console.log(req.body.item_type.length,"===",req.body.serving_days.length)
+  let item_type = req.body.item_type.length <= 2 ? req.body.item_type[0] : req.body.item_type
+
+  try {
+
+    
+    let product = await ProductSchema.count({ kitchen_name: req.body.kitchen_name, item_type: item_type });
+    if (product === 0) {
+      return res.status(200).json({ errors: [{ 'msg': 'This Kitchen dosnt exit' }] });
+
+    }
 
 
-    try {
+  } catch (error) {
 
-       let product = await ProductSchema.findOne({ kitchen_name:req.body.kitchen_name,item_title:req.body.item_name});
-        console.log(product ===null)
+    let str = `E11000 duplicate key error collection: test.products index`
 
-        if (product === null) {
-        console.log('come')
-        return res.status(200).json({ errors: [{'msg':'This Kitchen dosnt exit'}] });
-        
-      }
-
-
-    } catch (error) {
-
-      let str = `E11000 duplicate key error collection: test.products index`
-
-      if (error.name === 'MongoError' && error.code === 11000) {
-          return res.status(200).json({ errors: { 'msg': [error.errmsg.replace(str, `There was a duplicate key error in`).replace(/[':'",.<>\{\}\[\]\\\/]/gi, "").replace('dup key', '').replace('_1', ' :')] } });
-      } else {
-          next(error);
-      }
+    if (error.name === 'MongoError' && error.code === 11000) {
+      return res.status(200).json({ errors: { 'msg': [error.errmsg.replace(str, `There was a duplicate key error in`).replace(/[':'",.<>\{\}\[\]\\\/]/gi, "").replace('dup key', '').replace('_1', ' :')] } });
+    } else {
+      next(error);
+    }
   }
 
 
 
-try {
+  try {
 
-      let items = await KitchenItemServingDays.findOne({ kitchen_name:req.body.kitchen_name,item_title:req.body.item_name});
-      //console.log(items ===null)
+    if (req.body.serving_days.length >3  && item_type === "MainCourse") {
+      return res.status(200).json({ errors: [{ 'msg': 'MainCourse item 3 days per week from one kitchen' }] });
+    }
 
-      if (items === null) {
-        console.log('come')
-           return res.status(200).json({ errors: [{'msg':'Item already serving by this kitchen'}] });
-            
-          }
+    
+    if (req.body.item_type.length > 4 && item_type !== "MainCourse") {
+      return res.status(200).json({ errors: [{ 'msg': 'Item 3 days per week from one kitchen' }] });
+    }
 
-    }catch (error) {
 
-      let str = `E11000 duplicate key error collection: test.itemservingdays index`
+    let items = await KitchenItemServingDays.count({ kitchen_name: req.body.kitchen_name, item_type: item_type, serving_days: req.body.serving_days });
 
-      if (error.name === 'MongoError' && error.code === 11000) {
-          return res.status(200).json({ errors: { 'msg': [error.errmsg.replace(str, `There was a duplicate key error in`).replace(/[':'",.<>\{\}\[\]\\\/]/gi, "").replace('dup key', '').replace('_1', ' :')] } });
-      } else {
-          next(error);
-      }
+
+
+    if (items !== 0) {
+      return res.status(200).json({ errors: [{ 'msg': 'Item already serving by this kitchen' }] });
+
+    }
+
+  } catch (error) {
+
+    let str = `E11000 duplicate key error collection: test.itemservingdays index`
+
+    if (error.name === 'MongoError' && error.code === 11000) {
+      return res.status(200).json({ errors: { 'msg': [error.errmsg.replace(str, `There was a duplicate key error in`).replace(/[':'",.<>\{\}\[\]\\\/]/gi, "").replace('dup key', '').replace('_1', ' :')] } });
+    } else {
+      next(error);
+    }
   }
 
 
-  
+  try {
 
-try {
+    servingdays = new KitchenItemServingDays({
+      kitchen_name: req.body.kitchen_name,
+      u_id: req.body.u_id,
+      item_type: item_type,
+      item_name: req.body.item_name,
+      serving_days: req.body.serving_days,
 
-   servingdays = new KitchenItemServingDays({
+    });
+    let servingdaysRsponse = await servingdays.save();
 
-    kitchen_name: req.body.kitchen_name,
-    u_id: req.body.u_id,
-    item_type: req.body.item_type,
-    item_name: req.body.item_name,
-    serving_days : req.body.serving_days,
-   
-  });
+    console.log("--->>",servingdaysRsponse)
+    return res.status(200).json({ success: [{ 'msg': 'Serving days save successfully.' }] });
 
-  await servingdays.save();
+  } catch (error) {
 
-}catch (error) {
+    let str = `E11000 duplicate key error collection: test.itemservingdays index`
 
-  let str = `E11000 duplicate key error collection: test.itemservingdays index`
+    if (error.code !== 11000) {
 
-  if(error.code !==11000){
-                
-    errs = new CaptureErrorsSchema({
+      errs = new CaptureErrorsSchema({
         error: error,
         errorRoute: 'ItemServingDays',
-        kitchen_name:req.body.kitchen_name
-       
-       
-    });
+        kitchen_name: req.body.kitchen_name
 
 
-    await errs.save();
+      });
 
-  if (error.name === 'MongoError' && error.code === 11000) {
-      return res.status(200).json({ errors: { 'msg': [error.errmsg.replace(str, `There was a duplicate key error in`).replace(/[':'",.<>\{\}\[\]\\\/]/gi, "").replace('dup key', '').replace('_1', ' :')] } });
-  } else {
-      next(error);
+
+      await errs.save();
+
+      if (error.name === 'MongoError' && error.code === 11000) {
+        return res.status(200).json({ errors: { 'msg': [error.errmsg.replace(str, `There was a duplicate key error in`).replace(/[':'",.<>\{\}\[\]\\\/]/gi, "").replace('dup key', '').replace('_1', ' :')] } });
+      } else {
+        next(error);
+      }
+    }
+
+
   }
-}
-
-
-}})
+})
 
 
 

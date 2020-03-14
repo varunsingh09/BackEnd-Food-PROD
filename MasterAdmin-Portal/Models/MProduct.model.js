@@ -9,7 +9,7 @@ const ProductSchema = mongoose.model('Products', new mongoose.Schema({
 
     kitchen_name: { type: String, maxlength: 25, required: true,trim:true,lowercase: true },
     u_id: { type: Number, maxlength: 500, required: true,trim:true  },
-    item_type: { type: String, maxlength: 25, required: true,trim:true,lowercase: true  },
+    item_type: { type: String, maxlength: 25, required: true,trim:true  },
     serving_temp: { type: String, maxlength: 25, required: true,trim:true,lowercase: true  },
     item_name: { type: String, required: true,trim:true,lowercase: true  },
     recipe_with: { type: String,trim:true,lowercase: true  },
