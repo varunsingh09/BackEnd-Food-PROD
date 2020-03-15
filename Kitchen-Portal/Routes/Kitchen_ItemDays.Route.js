@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 var path = require('path');
 const { KitchenItemServingDays } = require('./../../Kitchen-Portal/Models/Kitchen_ItemDays.Model');
-//const { item_type} = require('./../middleware')
+const { already_serving_zipcodes, } = require('./../../middleware')
 //const { MasterAdminSignupSchema } = require('./../Models/Master_SignupSignin.Model');
 const { ProductSchema } = require('./../../MasterAdmin-Portal/Models/MProduct.model');
 
-const {CaptureErrorsSchema} = require('./../../Common-Model-Routes/Models/Error.model');
+const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Error.model');
 
 // This API is to store Kitchen product serving days 
 // This is incomplete has to be tested
@@ -18,7 +18,7 @@ router.post('/ItemServingDays', async (req, res, next) => {
 
   try {
 
-    
+
     let product = await ProductSchema.count({ kitchen_name: req.body.kitchen_name, item_type: item_type });
     if (product === 0) {
       return res.status(200).json({ errors: [{ 'msg': 'This Kitchen dosnt exit' }] });
@@ -41,11 +41,11 @@ router.post('/ItemServingDays', async (req, res, next) => {
 
   try {
 
-    if (req.body.serving_days.length >3  && item_type === "MainCourse") {
+    if (req.body.serving_days.length > 3 && item_type === "MainCourse") {
       return res.status(200).json({ errors: [{ 'msg': 'MainCourse item 3 days per week from one kitchen' }] });
     }
 
-    
+
     if (req.body.item_type.length != 10 && item_type !== "MainCourse") {
       return res.status(200).json({ errors: [{ 'msg': 'Item 3 days per week from one kitchen' }] });
     }
@@ -116,7 +116,25 @@ router.post('/ItemServingDays', async (req, res, next) => {
 })
 
 
+//check serving zipcode
 
+
+router.post('/ItemServingZipCodes', async (req, res, next) => {
+
+  let requestedZipCodes = req.body.zipcodes.map(Number)
+
+  //console.log(requestedZipCodes,"---",already_serving_zipcodes)
+
+  let intersection = already_serving_zipcodes.filter(x => requestedZipCodes.includes(x));
+
+  console.log("find elements", intersection.length)
+  
+  if (intersection.length > 0) {
+    return res.status(200).json({ errors: [{ 'msg': 'Already serving zipcodes', zipcode: intersection }] });
+  }
+  return res.status(200).json({ success: [{ 'msg': 'You are ready to serve zipcodes', zipcode: requestedZipCodes }] });
+
+})
 
 
 
