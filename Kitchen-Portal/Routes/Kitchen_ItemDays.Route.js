@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 var path = require('path');
 const { KitchenItemServingDays } = require('./../../Kitchen-Portal/Models/Kitchen_ItemDays.Model');
-const { already_serving_zipcodes, } = require('./../../middleware')
+const { serving_zipcodes, } = require('./../../middleware')
 //const { MasterAdminSignupSchema } = require('./../Models/Master_SignupSignin.Model');
 const { ProductSchema } = require('./../../MasterAdmin-Portal/Models/MProduct.model');
 
@@ -13,13 +13,23 @@ const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Erro
 
 
 router.post('/ItemServingDays', async (req, res, next) => {
-  console.log(req.body.item_type.length)
-  let item_type = req.body.item_type.length != 10 ? req.body.item_type[0] : req.body.item_type
+
+  let serving_days = req.body.serving_days.map(Number)
+  let serving_days_length = serving_days.length
+
+  let item_type_length = typeof req.body.item_type === "object" ? req.body.item_type.map(String).length : 1
+
+  let item_name_length = typeof req.body.item_name === "object" ? req.body.item_name.map(String).length : 1
+
+  let item_name = item_name_length > 1 ? req.body.item_name[0] : req.body.item_name
+  let item_type = item_type_length > 1 ? req.body.item_type[0] : req.body.item_type
+
 
   try {
 
 
-    let product = await ProductSchema.count({ kitchen_name: req.body.kitchen_name, item_type: item_type });
+    let product = await ProductSchema.count({ kitchen_name: req.body.kitchen_name, item_name: item_name });
+
     if (product === 0) {
       return res.status(200).json({ errors: [{ 'msg': 'This Kitchen dosnt exit' }] });
 
@@ -41,17 +51,21 @@ router.post('/ItemServingDays', async (req, res, next) => {
 
   try {
 
-    if (req.body.serving_days.length > 3 && item_type === "MainCourse") {
+
+    if ((item_type_length > 3 && item_type === "MainCourse") && serving_days_length > 3) {
+
+      //console.log("come")
+
       return res.status(200).json({ errors: [{ 'msg': 'MainCourse item 3 days per week from one kitchen' }] });
     }
 
 
-    if (req.body.item_type.length != 10 && item_type !== "MainCourse") {
+    if (item_type === "MainCourse" && serving_days_length > 3) {
       return res.status(200).json({ errors: [{ 'msg': 'Item 3 days per week from one kitchen' }] });
     }
 
 
-    let items = await KitchenItemServingDays.count({ kitchen_name: req.body.kitchen_name, item_type: item_type, serving_days: req.body.serving_days });
+    let items = await KitchenItemServingDays.count({ kitchen_name: req.body.kitchen_name, item_type: item_type, serving_days: serving_days, item_name: item_name });
 
 
 
@@ -78,8 +92,8 @@ router.post('/ItemServingDays', async (req, res, next) => {
       kitchen_name: req.body.kitchen_name,
       u_id: req.body.u_id,
       item_type: item_type,
-      item_name: req.body.item_name,
-      serving_days: req.body.serving_days,
+      item_name: item_name,
+      serving_days: serving_days,
 
     });
     let servingdaysRsponse = await servingdays.save();
@@ -123,12 +137,12 @@ router.post('/ItemServingZipCodes', async (req, res, next) => {
 
   let requestedZipCodes = req.body.zipcodes.map(Number)
 
-  //console.log(requestedZipCodes,"---",already_serving_zipcodes)
+  //console.log(req.body.zipcodes,"---",already_serving_zipcodes)
 
-  let intersection = already_serving_zipcodes.filter(x => requestedZipCodes.includes(x));
+  let intersection = serving_zipcodes.filter(x => requestedZipCodes.includes(x));
 
   console.log("find elements", intersection.length)
-  
+
   if (intersection.length > 0) {
     return res.status(200).json({ errors: [{ 'msg': 'Already serving zipcodes', zipcode: intersection }] });
   }
