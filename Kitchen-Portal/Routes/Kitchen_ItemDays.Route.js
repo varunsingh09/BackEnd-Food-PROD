@@ -5,6 +5,7 @@ const { KitchenItemServingDays } = require('./../../Kitchen-Portal/Models/Kitche
 const { serving_zipcodes, } = require('./../../middleware')
 //const { MasterAdminSignupSchema } = require('./../Models/Master_SignupSignin.Model');
 const { ProductSchema } = require('./../../MasterAdmin-Portal/Models/MProduct.model');
+const { ZipcodeKitchensSchema } =require('./../../MasterAdmin-Portal/Models/MZipcode-Kitchen.model');
 
 const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Error.model');
 
@@ -31,7 +32,7 @@ router.post('/ItemServingDays', async (req, res, next) => {
     let product = await ProductSchema.count({ kitchen_name: req.body.kitchen_name, item_name: item_name });
 
     if (product === 0) {
-      return res.status(200).json({ errors: [{ 'msg': 'This Kitchen dosnt exit' }] });
+      return res.status(200).json({ errors: [{ 'msg': 'This Kitchen or item dose not exit' }] });
 
     }
 
@@ -56,12 +57,12 @@ router.post('/ItemServingDays', async (req, res, next) => {
 
       //console.log("come")
 
-      return res.status(200).json({ errors: [{ 'msg': 'MainCourse item 3 days per week from one kitchen' }] });
+      return res.status(200).json({ errors: [{ 'msg': 'Only 3 maincourse Item PER DAY from one kitchen.' }] });
     }
 
 
     if (item_type === "MainCourse" && serving_days_length > 3) {
-      return res.status(200).json({ errors: [{ 'msg': 'Item 3 days per week from one kitchen' }] });
+      return res.status(200).json({ errors: [{ 'msg': 'Max 3 Days per week same item can be served by kitchen.' }] });
     }
 
 
@@ -137,16 +138,27 @@ router.post('/ItemServingZipCodes', async (req, res, next) => {
 
   let requestedZipCodes = req.body.zipcodes.map(Number)
 
-  //console.log(req.body.zipcodes,"---",already_serving_zipcodes)
+  console.log(serving_zipcodes, "<<====>>", requestedZipCodes)
 
   let intersection = serving_zipcodes.filter(x => requestedZipCodes.includes(x));
 
-  console.log("find elements", intersection.length)
+console.log("find elements", intersection.length)
 
-  if (intersection.length > 0) {
-    return res.status(200).json({ errors: [{ 'msg': 'Already serving zipcodes', zipcode: intersection }] });
+  if (intersection.length === 0) {
+    return res.status(200).json({ errors: [{ 'error': 'We are not serving these zipcodes', "requestead_zipcodes": requestedZipCodes,'success': 'We are serving these zipcodes', "serving_zipcodes": serving_zipcodes }] });
   }
-  return res.status(200).json({ success: [{ 'msg': 'You are ready to serve zipcodes', zipcode: requestedZipCodes }] });
+
+
+
+  let zipcodes  = await ZipcodeKitchensSchema.find({ zipcodes: req.body.zipcodes, kitchen_names: 
+    req.body.kitchen_names});
+
+
+
+    console.log("===",zipcodes)
+
+    return res.status(200).json({ errors: [{ 'success': 'These kitchen already serving zipcodes', "serving_zipcodes": zipcodes }] });
+
 
 })
 
