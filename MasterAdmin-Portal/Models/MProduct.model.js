@@ -7,7 +7,7 @@ mongoose.set('useCreateIndex', true);
 const ProductSchema = mongoose.model('Products', new mongoose.Schema({
 
 
-    kitchen_name: { type: String, maxlength: 25, required: true,trim:true,lowercase: true },
+    kitchen_name: { type: String, maxlength: 25, required: true,trim:true,lowercase: false },
     u_id: { type: Number, maxlength: 500, required: true,trim:true  },
     item_type: { type: String, maxlength: 25, required: true,trim:true  },
     serving_temp: { type: String, maxlength: 25, required: true,trim:true,lowercase: true  },

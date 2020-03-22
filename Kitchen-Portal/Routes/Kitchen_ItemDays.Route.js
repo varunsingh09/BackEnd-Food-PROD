@@ -141,11 +141,9 @@ router.post('/ItemServingZipCodes', async (req, res, next) => {
   let requestedZipCodes = zipcodes.map(Number)
 
   //console.log(serving_zipcodes, "<<====>>", requestedZipCodes)
-
   let notExistZipcodes = requestedZipCodes.filter(x => !serving_zipcodes.includes(x));
 
   //console.log("find elements", intersection)
-
   if (notExistZipcodes.length > 0) {
     return res.status(200).json({ data: [{ 'error': 'We are not serving these zipcodes', "notserving_zipcodes": notExistZipcodes, 'success': 'We are serving these zipcodes', "serving_zipcodes": serving_zipcodes }] });
   }
@@ -153,9 +151,6 @@ router.post('/ItemServingZipCodes', async (req, res, next) => {
   let kitchen_names = typeof req.body.kitchen_names === "object" ? req.body.kitchen_names.map(String) : req.body.kitchen_names
 
   //console.log("---------------", kitchen_names)
-
-
-
   let product = await ProductSchema.count({ kitchen_name: kitchen_names, u_id: req.body.u_id });
 
   if (product === 0) {
@@ -163,15 +158,10 @@ router.post('/ItemServingZipCodes', async (req, res, next) => {
 
   }
 
-
-
   let zipcodesData = await ZipcodeKitchensSchema.find({ zipcodes: zipcodes, kitchen_names: kitchen_names });
 
   //console.log("---------------", zipcodesData.length===0)
-
-
   if (zipcodesData.length === 0) {
-
 
     try {
 
@@ -194,7 +184,7 @@ router.post('/ItemServingZipCodes', async (req, res, next) => {
 
         errs = new CaptureErrorsSchema({
           error: error,
-          errorRoute: 'ItemServingDays',
+          errorRoute: 'ZipcodeKitchensSchema',
           kitchen_name: kitchen_names
 
 
@@ -215,16 +205,6 @@ router.post('/ItemServingZipCodes', async (req, res, next) => {
     return res.status(200).json({ errors: [{ 'success': 'These kitchen already serving zipcodes', "serving_zipcodes": zipcodesData }] });
 
   }
-
-
-
-
-
-
-
-
-
-
 
 })
 
