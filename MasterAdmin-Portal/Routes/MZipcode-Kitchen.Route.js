@@ -99,4 +99,28 @@ router.post('/ZipcodeKitchens', async (req, res, next) => {
 })
 
 
+
+router.get('/ZipcodeKitchens', async (req, res, next) => {
+
+    let kitchen_names = typeof req.body.kitchen_names === "object" ? req.body.kitchen_names.map(String) : req.body.kitchen_names
+
+    //console.log("---------------", kitchen_names)
+    let product = await ProductSchema.count({ kitchen_name: kitchen_names });
+
+    if (product === 0) {
+        return res.status(200).json({ errors: [{ 'msg': 'This Kitchen dose not exit' }] });
+
+    }
+
+    let zipcodesData = await ZipcodeKitchensSchema.find({});
+
+
+    return res.status(200).json({ errors: [{ 'msg': 'Zipcode with kitchen' ,'zipcode_data':zipcodesData }] });
+
+
+
+})
+
+
+
 module.exports = router;

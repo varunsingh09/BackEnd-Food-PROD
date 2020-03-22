@@ -13,6 +13,24 @@ const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Erro
 router.post('/ItemServingDays', async (req, res, next) => {
 
   let serving_days = req.body.serving_days.map(Number)
+
+  let date = new Date();
+  let day = date.getDay()
+
+
+  //console.log("---------", serving_days)
+
+  let currentDay = serving_days.every(function (e) {
+    return e >= day;
+  });
+
+
+  if (currentDay === false) {
+
+    return res.status(200).json({ errors: [{ 'msg': 'Previous days can not be update' }] });
+
+  }
+
   let serving_days_length = serving_days.length
 
   let item_type_length = typeof req.body.item_type === "object" ? req.body.item_type.map(String).length : 1
