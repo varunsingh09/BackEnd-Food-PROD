@@ -102,6 +102,7 @@ router.post('/ZipcodeKitchens', async (req, res, next) => {
 
 router.get('/ZipcodeKitchens', async (req, res, next) => {
 
+    
     let kitchen_names = typeof req.body.kitchen_names === "object" ? req.body.kitchen_names.map(String) : req.body.kitchen_names
 
     //console.log("---------------", kitchen_names)
