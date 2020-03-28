@@ -71,6 +71,10 @@ app.use('/StateCities', StateCity)
 
 
 
+// Zipcode & Kicthens API route [this will tell which kicthens are serving which zipcodes]
+const ZipcodeKitchen = require ('./MasterAdmin-Portal/Routes/MZipcode-Kitchen.Route')
+app.use('/ZipcodesKitchens', ZipcodeKitchen)
+// Post  - /ZipcodesKitchens/ZipcodeKitchens
 
 
 
