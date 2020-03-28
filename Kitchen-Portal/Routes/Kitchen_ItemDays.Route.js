@@ -13,11 +13,11 @@ const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Erro
 
 router.post('/ItemServingDays', async (req, res, next) => {
 
-  let serving_days = req.body.serving_days.map(Number)
+  //let serving_days = req.body.serving_days.map(Number)
+  let serving_days = typeof req.body.serving_days === "object" ? req.body.serving_days.map(Number) : [req.body.serving_days[0]].map(Number)
 
   let date = new Date();
   let day = date.getDay()
-
 
   //console.log("---------", serving_days)
 
@@ -147,15 +147,17 @@ router.post('/ItemServingDays', async (req, res, next) => {
 
 //portal display kitchen name with item
 router.post('/ItemServingDaysMatserAdmin', async (req, res, next) => {
+  //console.log("---", typeof req.body.serving_days)
+  let kitchen_name = `chicago kitchen`
 
-  let serving_days = req.body.serving_days.map(Number)
+  let serving_days = typeof req.body.serving_days === "object" ? req.body.serving_days.map(Number) : [req.body.serving_days[0]].map(Number)
+
+  //console.log("--->>>", serving_days)
 
   let date = new Date();
   let day = date.getDay()
 
-
   //console.log("---------", serving_days)
-
   let currentDay = serving_days.every(function (e) {
     return e >= day;
   });
@@ -175,12 +177,10 @@ router.post('/ItemServingDaysMatserAdmin', async (req, res, next) => {
 
   let item_name = item_name_length > 1 ? req.body.item_name[0] : req.body.item_name
   let item_type = item_type_length > 1 ? req.body.item_type[0] : req.body.item_type
-
-
+  
   try {
 
-
-    let product = await ProductSchema.count({ kitchen_name: req.body.kitchen_name, item_name: item_name });
+    let product = await ProductSchema.count({ kitchen_name: kitchen_name, item_name: item_name });
 
     if (product === 0) {
       return res.status(200).json({ errors: [{ 'msg': 'This Kitchen or item dose not exit' }] });
@@ -202,7 +202,6 @@ router.post('/ItemServingDaysMatserAdmin', async (req, res, next) => {
 
   try {
 
-
     if ((item_type_length > 3 && item_type === "MainCourse") && serving_days_length > 3) {
 
       //console.log("come")
@@ -215,10 +214,7 @@ router.post('/ItemServingDaysMatserAdmin', async (req, res, next) => {
       return res.status(200).json({ errors: [{ 'msg': 'Max 3 Days per week same item can be served by kitchen.' }] });
     }
 
-
-    let items = await KitchenItemServingDays.count({ kitchen_name: req.body.kitchen_name, item_type: item_type, serving_days: serving_days, item_name: item_name });
-
-
+    let items = await KitchenItemServingDays.count({ kitchen_name: kitchen_name, item_type: item_type, serving_days: serving_days, item_name: item_name });
 
     if (items !== 0) {
       return res.status(200).json({ errors: [{ 'msg': 'Item already serving by this kitchen' }] });
@@ -240,7 +236,7 @@ router.post('/ItemServingDaysMatserAdmin', async (req, res, next) => {
   try {
 
     servingdays = new KitchenItemServingDays({
-      kitchen_name: req.body.kitchen_name,
+      kitchen_name: kitchen_name,
       u_id: req.body.u_id,
       item_type: item_type,
       item_name: item_name,
@@ -261,7 +257,7 @@ router.post('/ItemServingDaysMatserAdmin', async (req, res, next) => {
       errs = new CaptureErrorsSchema({
         error: error,
         errorRoute: 'ItemServingDays',
-        kitchen_name: req.body.kitchen_name
+        kitchen_name: kitchen_name
 
 
       });
