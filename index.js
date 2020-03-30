@@ -47,12 +47,21 @@ app.use('/Servingdays', ItemServingDays)
 
 
 
-// Add product - Api Route // this is new structure
+// Add product - Api Route 
 const Addproduct = require ('./MasterAdmin-Portal/Routes/MProduct.Route')
 app.use('/products', Addproduct)
 // Post - /products/Addproduct
 // Get  - /products/preSetData
 // Get  -/products/Allproducts
+
+
+// VARUN VARUN HANDLING ORDER API
+// ADD Customer Order  - API Route // This is API with QR CODE - varun handling 
+const CustomerOrder = require('./Customer-Portal/Routes/CustomerOrder.Route')
+app.use('/orders',CustomerOrder)
+// post - /orders/CustomerOrder 
+
+
 
 
 
