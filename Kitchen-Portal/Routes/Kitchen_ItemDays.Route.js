@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 var path = require('path');
+var QRCode = require('qrcode')
 const { KitchenItemServingDays } = require('./../../Kitchen-Portal/Models/Kitchen_ItemDays.Model');
 //const { MasterAdminSignupSchema } = require('./../Models/Master_SignupSignin.Model');
 const { ProductSchema } = require('./../../MasterAdmin-Portal/Models/MProduct.model');
@@ -159,7 +160,7 @@ router.get('/ItemServingDaysMatserAdmin', async (req, res, next) => {
       match.kitchen_name = req.body.kitchen_name
     }
     // end here
-    
+
     let KitchenItemServing = await KitchenItemServingDays.find(match);
     if (KitchenItemServing.length > 0) {
       return res.status(200).json({ success: [{ 'data': KitchenItemServing, "total_kitchen": KitchenItemServing.length }] });
@@ -184,6 +185,47 @@ router.get('/ItemServingDaysMatserAdmin', async (req, res, next) => {
 
 
 })
+
+
+router.get('/qrcode', async (req, res, next) => {
+
+  let qrcode = req.body.qrcode;
+  //console.log(req.query.qrcode)
+
+  if (req.query.qrcode !== undefined) {
+    qrcode = req.query.qrcode
+  }
+
+  // QRCode.toString(qrcode,{type:'svg'}, function (err, url) {
+  //   console.log(url)
+  //   res.send(url)
+  // })
+
+  var opts = {
+    errorCorrectionLevel: 'H',
+    type: 'svg',
+    quality: 0.3,
+    width: 300,
+    margin: 1,
+    color: {
+      dark: "#010599FF",
+      light: "#FFBF60FF"
+    }
+  }
+
+  //qrcode = `${req.body.qrcode}${req.body.address}${req.body.mobile}${req.body.name}`
+  console.log("-->>", qrcode)
+  QRCode.toString(qrcode, opts, function (err, url) {
+    console.log("terminal--->>>", url)
+    res.send(url)
+  })
+
+
+})
+
+
+
+
 
 
 
