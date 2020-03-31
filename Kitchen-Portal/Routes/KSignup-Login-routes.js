@@ -337,7 +337,4 @@ router.get('/verifyEmail', async (req, res, next) => {
 
 
 
-
-
-
 module.exports = router;
