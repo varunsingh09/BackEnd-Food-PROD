@@ -1,5 +1,6 @@
 const express = require('express');
 var nodemailer = require('nodemailer');
+var QRCode = require('qrcode')
 const router = express.Router();
 const uuidv4 = require('uuid/v4');
 const { KitchenSignupSchema } = require('../../Kitchen-Portal/Models/KSignup-model')
@@ -222,5 +223,45 @@ return res.send({"success":"success"})
     // }
 
 });
+
+//http://localhost:3001/orders/qrcode
+router.get('/qrcode', async (req, res, next) => {
+
+    let qrcode = req.body.qrcode;
+    //console.log(req.query.qrcode)
+  
+    if (req.query.qrcode !== undefined) {
+      qrcode = req.query.qrcode
+    }
+  
+    // QRCode.toString(qrcode,{type:'svg'}, function (err, url) {
+    //   console.log(url)
+    //   res.send(url)
+    // })
+  
+    var opts = {
+      errorCorrectionLevel: 'H',
+      type: 'svg',
+      quality: 0.3,
+      width: 300,
+      margin: 1,
+      color: {
+        dark: "#010599FF",
+        light: "#FFBF60FF"
+      }
+    }
+  
+    //qrcode = `${req.body.qrcode}${req.body.address}${req.body.mobile}${req.body.name}`
+    console.log("-->>", qrcode)
+    QRCode.toString(qrcode, opts, function (err, url) {
+      console.log("terminal--->>>", url)
+      res.send(url)
+    })
+  
+  
+  })
+  
+  
+  
 
 module.exports = router;
