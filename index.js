@@ -26,6 +26,15 @@ app.use('/Master',MSignUp)
 
 
 
+// Developed by Talha 
+// Master Admin Meal Package Plan // 
+const MMealPlan = require('./MasterAdmin-Portal/Routes/MMealPackage.Route')
+app.use('/Master',MMealPlan)
+// Post  - /Master/MealPackage
+
+
+
+
 // Kitchen Signup Api Route // This is new structure
 const KSignUp = require('./Kitchen-Portal/Routes/KSignup-Login-routes')
 app.use('/Kitchen',KSignUp)
@@ -84,6 +93,7 @@ app.use('/StateCities', StateCity)
 const ZipcodeKitchen = require ('./MasterAdmin-Portal/Routes/MZipcode-Kitchen.Route')
 app.use('/ZipcodesKitchens', ZipcodeKitchen)
 // Post  - /ZipcodesKitchens/ZipcodeKitchens
+
 
 
 

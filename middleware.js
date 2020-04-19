@@ -64,6 +64,14 @@ module.exports = {
 
     ],
 
+    validateMealPackageFields: [
+        check('package_type','Package Type is required 1.').not().isEmpty().withMessage('Please check Package Type.'),
+        //check('email').not().isEmpty().withMessage('Can not levave black').isEmail('Wrong email format'),
+        //isLength({ min: 3, max: 50 }).withMessage('Name length in between 3 to 50 chars'),
+        check('days').not().isEmpty().withMessage('Days Cant be Empty!!'),
+        check('price_perday').not().isEmpty().withMessage('Price Per Day cant be Empty!!').isLength({ min: 1, max: 5 }).withMessage('length max 5 character'),
+        check('stripe_plan_id').not().isEmpty().withMessage('stripe_plan_id Cant be Empty!!'),
+    ],
 
     CustomerSignInValidations: [
         check('email','Email is required.').not().isEmpty().isEmail().withMessage('Please check email.'),

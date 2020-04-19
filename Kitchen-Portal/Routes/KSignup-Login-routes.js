@@ -74,8 +74,6 @@ router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) 
 
     try {
         admin = new KitchenSignupSchema({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
             kitchen_name: req.body.kitchen_name,
             address:req.body.address,
             state: req.body.state,
@@ -83,7 +81,7 @@ router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) 
             zipcode: req.body.zipcode,
             email: req.body.email,
             password: hashPassword,
-            phone_no: req.body.phone_no,
+            contact_no: req.body.contact_no,
             agreement_policy: req.body.agreement_policy,
         });
 
@@ -311,7 +309,7 @@ router.post('/KitchenLogin',CustomerSignInValidations,async (req, res, next) => 
 
 
 
-// This Route is for eemail verfication through email,and will update its status to true 
+// This Route is for email verfication through email,and will update its status to true 
 // Get - localhost:3001/kitchen/verifyEmail
 router.get('/verifyEmail', async (req, res, next) => {
 
