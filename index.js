@@ -31,6 +31,7 @@ app.use('/Master',MSignUp)
 const MMealPlan = require('./MasterAdmin-Portal/Routes/MMealPackage.Route')
 app.use('/Master',MMealPlan)
 // Post  - /Master/MealPackage
+// Get   - /Master/GetListMealPackages 
 
 
 

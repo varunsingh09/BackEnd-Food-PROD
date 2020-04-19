@@ -83,4 +83,34 @@ router.post('/MealPackage',validateMealPackageFields, async function (req, res, 
 
 
 
+// Meal Package  LIST     { Have to test this API before we integrate }
+// This Route is to fetech all Meal Packages list 
+// GET- localhost:3001/Master/GetListMealPackages 
+
+router.get('/GetListMealPackages', async(req,res,next) => {
+    
+
+
+    try {
+            
+        let package_count = await MealPackagesSchema.find({}).count();
+
+        let mealpackages = await MealPackagesSchema.find({},{'package_type':1,'days':1,'price_perday':1,'total_price':1,'stripe_plan_id':1,'status':1,'_id':0}).lean(true).skip(0).
+        sort({"_id":-1}).limit(10);
+    
+
+             if(mealpackages.length==0) 
+             {res.status(200).send({"errors":"No Record Found in Database"})}
+             else { res.status(200).send({'result': mealpackages,"package_count":package_count})}
+
+    } catch (error){
+
+
+    }
+
+})
+
+
+
+
 module.exports = router;
