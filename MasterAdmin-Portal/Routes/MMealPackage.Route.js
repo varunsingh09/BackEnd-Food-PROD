@@ -4,7 +4,7 @@ const { MealPackagesSchema } = require('../../MasterAdmin-Portal/Models/MMealPac
 const { validationResult } = require("express-validator/check");
 const { validateMealPackageFields } = require('./../../middleware')
 const {CaptureErrorsSchema} = require('./../../Common-Model-Routes/Models/Error.model')
-const stripe = require('stripe')('sk_test_FWmTFMQgAe2ZNPW9HKfAF3e000u9ttdGzK');
+const stripe = require('stripe')(process.env.StripeSecretKey);
 
 // Meal Package Route
 // Post - localhost:3001/Master/MealPackage
@@ -32,29 +32,53 @@ router.post('/MealPackage',validateMealPackageFields, async function (req, res, 
     {
 
 
-
-        //const calculate =
     let total_price = req.body.price_perday * req.body.days;
 
-    let CreateStripeProduct = await stripe.plans.create(
-                              {
-                                // name: req.body.package_type + " "+ req.body.days,
-                                // type: "good"
-                                amount: Math.round( total_price ) * 100,
-                                currency: 'usd',
-                                interval: 'month',
-                                product: {name: req.body.package_type + " "+ req.body.days},
-                              }
-                            );
 
-    console.log(CreateStripeProduct);
+    let stripeProducts = await stripe.products.list();
+
+    let stripePackage = "";
+
+    for(let product of stripeProducts.data){
+      if (product.name == req.body.package_type){
+        stripePackage = product;
+        break;
+      }
+    }
+
+    if(stripePackage == ""){
+      stripePackage = await stripe.products.create(
+                      {
+                        name: req.body.package_type,
+                        type: 'service',
+                        description: req.body.package_type + " package"
+                      }
+                    );
+    }
+
+
+    console.log(stripePackage);
+
+    let stripePlan = await stripe.plans.create(
+                    {
+                      amount:  total_price * 100,
+                      currency: 'usd',
+                      interval: 'month',
+                      nickname: req.body.days + " days",
+                      product: stripePackage.id
+                    }
+                  );
+
+    console.log(stripePlan);
+
     try {
         admin = new MealPackagesSchema({
             package_type: req.body.package_type,
             days: req.body.days,
             price_perday: req.body.price_perday,
-            total_price: total_price,//req.body.total_price,
-            stripe_plan_id: CreateStripeProduct.id,
+            total_price: total_price,
+            stripe_plan_id: stripePlan.id,
+            stripe_product_id: stripePackage.id,
             status: true
 
         });
