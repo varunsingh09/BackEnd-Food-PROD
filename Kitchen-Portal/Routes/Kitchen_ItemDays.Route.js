@@ -159,7 +159,7 @@ router.get('/ItemServingDaysMatserAdmin', async (req, res, next) => {
       match.kitchen_name = req.body.kitchen_name
     }
     // end here
-    
+
     let KitchenItemServing = await KitchenItemServingDays.find(match);
     if (KitchenItemServing.length > 0) {
       return res.status(200).json({ success: [{ 'data': KitchenItemServing, "total_kitchen": KitchenItemServing.length }] });
@@ -184,6 +184,10 @@ router.get('/ItemServingDaysMatserAdmin', async (req, res, next) => {
 
 
 })
+
+
+
+
 
 
 

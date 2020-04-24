@@ -19,10 +19,20 @@ app.use(session({ secret: 'ssshhhhh', saveUninitialized: true, resave: true }));
 app.use(cors()); // cros is for cross orgin resouce for issue with front end backend ports
 
 
-// Master Admin Signup API Route // This is new structure 
+// Master Admin Signup API Route // This is new structure
 const MSignUp = require('./MasterAdmin-Portal/Routes/MSignup-route')
 app.use('/Master',MSignUp)
 // Post - /Master/MasterSignup
+
+
+
+// Developed by Talha
+// Master Admin Meal Package Plan //
+const MMealPlan = require('./MasterAdmin-Portal/Routes/MMealPackage.Route')
+app.use('/Master',MMealPlan)
+// Post  - /Master/MealPackage
+// Get   - /Master/GetListMealPackages
+
 
 
 
@@ -38,7 +48,7 @@ app.use('/Kitchen',KList)
 // get - /Kitchen/AllKitchen_fromCache     // This API will fetch Kitchen list
 
 
-// HI varun this the route for story 4 from azure devops 
+// HI varun this the route for story 4 from azure devops
 // Kitchen  Item Serving days [ Not yet completed need to work on it]
 const ItemServingDays = require('./Kitchen-Portal/Routes/Kitchen_ItemDays.Route')
 app.use('/Servingdays', ItemServingDays)
@@ -47,7 +57,7 @@ app.use('/Servingdays', ItemServingDays)
 
 
 
-// Add product - Api Route // this is new structure
+// Add product - Api Route
 const Addproduct = require ('./MasterAdmin-Portal/Routes/MProduct.Route')
 app.use('/products', Addproduct)
 // Post - /products/Addproduct
@@ -55,15 +65,24 @@ app.use('/products', Addproduct)
 // Get  -/products/Allproducts
 
 
+// VARUN VARUN HANDLING ORDER API
+// ADD Customer Order  - API Route // This is API with QR CODE - varun handling
+const CustomerOrder = require('./Customer-Portal/Routes/CustomerOrder.Route')
+app.use('/orders',CustomerOrder)
+// post - /orders/CustomerOrder
 
 
-// Error Route API Route // This new structure 
+
+
+
+
+// Error Route API Route // This new structure
 const Errors = require('./Common-Model-Routes/Routes/Error.routes')
 app.use('/CaptureErr',Errors)
 // Post - /CaptureErr/ErrorCapture
 
 
-// State and City Api Route 
+// State and City Api Route
 const StateCity = require ('./Common-Model-Routes/Routes/StateCity.routes')
 app.use('/StateCities', StateCity)
 // Get - /StateCities/readJsonFile
@@ -82,11 +101,12 @@ app.use('/ZipcodesKitchens', ZipcodeKitchen)
 
 
 
+
 /// -------------------------------------------------------///
 
 
 // Asif bhai  = Pls add logic to below code as mentioned in WORKITEM
-// we capture all errors and save it to datbase collection ,[Date ,error type, IP address ] 
+// we capture all errors and save it to datbase collection ,[Date ,error type, IP address ]
 //if datbase is down then when its up it should save that to database collection .
 
 
@@ -108,8 +128,10 @@ app.use((error,req,res,next) => {
 
 
 
- 
 
 
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+
+module.exports = app;

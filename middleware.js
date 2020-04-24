@@ -28,19 +28,19 @@ var storage = multer.diskStorage({
 
 module.exports = {
 
-    
+
     jwtVerifyToken: function (req, res, next) {
         //console.log('come inside verify token' , req)
         var token = req.headers['x-access-token'];
         if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
-        
+
         jwt.verify(token, config.secret, function (err, decoded) {
             if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
             return next();
         });
 
     },
-    
+
     jwtSignin: function (req, res,next, { userId,admin }) {
         //console.log("come",userId)
 
@@ -54,7 +54,7 @@ module.exports = {
     upload: multer({ storage: storage }),
 
 
-    // Validation middleware check method for validation 
+    // Validation middleware check method for validation
     validateMeChecks: [
         check('email','Email is required.').not().isEmpty().isEmail().withMessage('Please check email.'),
         //check('email').not().isEmpty().withMessage('Can not levave black').isEmail('Wrong email format'),
@@ -64,13 +64,21 @@ module.exports = {
 
     ],
 
+    validateMealPackageFields: [
+        check('package_type','Package Type is required 1.').not().isEmpty().withMessage('Please check Package Type.'),
+        //check('email').not().isEmpty().withMessage('Can not levave black').isEmail('Wrong email format'),
+        //isLength({ min: 3, max: 50 }).withMessage('Name length in between 3 to 50 chars'),
+        check('days').not().isEmpty().withMessage('Days Cant be Empty!!'),
+        check('price_perday').not().isEmpty().withMessage('Price Per Day cant be Empty!!').isLength({ min: 1, max: 5 }).withMessage('length max 5 character'),
+        // check('stripe_plan_id').not().isEmpty().withMessage('stripe_plan_id Cant be Empty!!'),
+    ],
 
     CustomerSignInValidations: [
         check('email','Email is required.').not().isEmpty().isEmail().withMessage('Please check email.'),
         //check('email').not().isEmpty().withMessage('Can not levave black').isEmail('Wrong email format'),
         //isLength({ min: 3, max: 50 }).withMessage('Name length in between 3 to 50 chars'),
         check('password').not().isEmpty().withMessage('Password Cant be Empty!!'),
-        
+
 
     ],
 
@@ -89,8 +97,5 @@ module.exports = {
 
     serving_zipcodes:[60045,60066,60067,6004,8007,45005,45006,45007,45008,45009],
 
-    
+
 }
-
-
-
