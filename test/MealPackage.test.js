@@ -14,11 +14,11 @@ let should = chai.should();
 chai.use(chaiHttp);
 //Our parent block
 describe('MealPackagesSchema', () => {
-  // beforeEach((done) => {
-  //     MealPackagesSchema.remove({}, (err) => { //Before each test we empty the database
-  //        done();
-  //     });
-  // });
+  beforeEach((done) => {
+      MealPackagesSchema.remove({}, (err) => { //Before each test we empty the database
+         done();
+      });
+  });
   /*
   * Test the /POST route
   */
@@ -74,6 +74,14 @@ describe('MealPackagesSchema', () => {
   });
 
 
+});
+
+
+
+describe('MealPackagesSchema mealPackage already exists', () => {
+  /*
+  * Test the /POST route
+  */
 
   describe('/POST Master/MealPackage', () => {
       it('it should not POST a MealPackage, MealPackage already exists', (done) => {
