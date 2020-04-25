@@ -19,7 +19,7 @@ const rounds = 10
 // Post - localhost:3001/kitchen/KitchenSignup
 router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) {
 
-
+    console.log(req.body)
     const errors = validationResult(req);
 
 
@@ -50,11 +50,11 @@ router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) 
        
     }
      
-    let adminP = await KitchenSignupSchema.findOne({phone_no:req.body.phone_no});
+    let adminP = await KitchenSignupSchema.findOne({contact_no:req.body.contact_no});
     if  (adminP!==null)
     {
         IsalreadyExist=true;
-        ErrMsg.push({msg:"Phone already exist",param:'phone'});
+        ErrMsg.push({msg:"Phone already exist",param:'contact_no'});
         //ErrMsg.Phone="Phone already exist";
        
     }
@@ -64,7 +64,6 @@ router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) 
         return res.status(200).json({ errors: ErrMsg });
 
                // return res.status(200).json({ errors: [{'msg': ErrMsg+ ' already exist in database,please use unique with group'}] });
-
 
     } else {
 
@@ -182,7 +181,7 @@ router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) 
         });
 
 
-        return res.status(200).send({ response: admin, 'route': 'https://yahoo.com','Msg': 'Successfully Created Master User' });
+        return res.status(200).send({ success: admin, 'route': 'https://yahoo.com','Msg': 'Successfully Created Master User' });
 
 
     } catch (error) {
@@ -200,17 +199,12 @@ router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) 
                     kitchen_name:req.body.kitchen_name
                    
                    
-                });
-        
+                }); 
     
-                await errs.save();
-    
-    
+                await errs.save();   
     
             }
             
-
-
         if (error.name === 'MongoError' && error.code === 11000) {
         let ermsg = error.errmsg.replace(str, `Duplicate key `).replace(/[':'",.<>\{\}\[\]\\\/]/gi, "").replace('dup key', '').replace('_1',' :')            
         console.log(error,"-------",ermsg)   
