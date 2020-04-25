@@ -19,7 +19,6 @@ const rounds = 10
 // Post - localhost:3001/kitchen/KitchenSignup
 router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) {
 
-    console.log(req.body)
     const errors = validationResult(req);
 
 
@@ -207,7 +206,6 @@ router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) 
             
         if (error.name === 'MongoError' && error.code === 11000) {
         let ermsg = error.errmsg.replace(str, `Duplicate key `).replace(/[':'",.<>\{\}\[\]\\\/]/gi, "").replace('dup key', '').replace('_1',' :')            
-        console.log(error,"-------",ermsg)   
         return res.status(200).json({ errors:[{'msg':ermsg}] });
         } else {
             next(error);
