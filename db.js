@@ -2,11 +2,11 @@ const mongoose = require('mongoose')
 require('dotenv').config();
 
 //Ashif comment
-mongoose.connect(process.env.DatabaseIkram, {useNewUrlParser: true});
-// mongoose.connect(
-//                   "mongodb+srv://user1:user1@cluster0-dsdsy.mongodb.net/test?retryWrites=true&w=majority",
-//                   //process.env.DatabaseIkram,
-//                   {useNewUrlParser: true});
+// mongoose.connect(process.env.DatabaseIkram, {useNewUrlParser: true});
+mongoose.connect(
+                  "mongodb+srv://user1:user1@cluster0-dsdsy.mongodb.net/test?retryWrites=true&w=majority",
+                  //process.env.DatabaseIkram,
+                  {useNewUrlParser: true});
 
 mongoose.connection
     .once("open", () => console.log("Connected to Database"))
