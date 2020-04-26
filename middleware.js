@@ -41,8 +41,8 @@ module.exports = {
 
     },
 
+
     jwtSignin: function (req, res, next, { userId, admin }) {
-        //console.log("come",userId)
 
         var token = jwt.sign({ id: userId }, config.secret, {
             expiresIn: 86400 // expires in 24 hours
@@ -54,7 +54,7 @@ module.exports = {
     upload: multer({ storage: storage }),
 
 
-    // Validation middleware check method for validation 
+    // Validation middleware check method for validation
     validateMeChecks: [
         check('email', 'Email Cannot be empty.').not().isEmpty().isEmail().withMessage('Email is not valid'),
         //check('email').not().isEmpty().withMessage('Can not levave black').isEmail('Wrong email format'),
@@ -70,7 +70,7 @@ module.exports = {
         //isLength({ min: 3, max: 50 }).withMessage('Name length in between 3 to 50 chars'),
         check('days').not().isEmpty().withMessage('Days Cant be Empty!!'),
         check('price_perday').not().isEmpty().withMessage('Price Per Day cant be Empty!!').isLength({ min: 1, max: 5 }).withMessage('length max 5 character'),
-        check('stripe_plan_id').not().isEmpty().withMessage('stripe_plan_id Cant be Empty!!'),
+        // check('stripe_plan_id').not().isEmpty().withMessage('stripe_plan_id Cant be Empty!!'),
     ],
 
     CustomerSignInValidations: [
@@ -97,8 +97,4 @@ module.exports = {
 
     serving_zipcodes: [60045, 60066, 60067, 6004, 8007, 45005, 45006, 45007, 45008, 45009],
 
-
 }
-
-
-

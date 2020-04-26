@@ -255,7 +255,7 @@ router.post('/KitchenSignInLogout',async (req, res, next) => {
 
 // Kitchen Login 
 // This API will generate JWT token when on successful sign in 
-// Post - localhost:3001/kitchen/KLogin
+// Post - localhost:3001/kitchen/KitchenLogin
 
 
 
