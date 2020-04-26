@@ -98,7 +98,7 @@ router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) 
             // sending mail to 
             var mailOptions = {
                 from: 'dineout2018@gmail.com',
-                to: 'Syedhaq5511@gmail.com',// req.body.email
+                to: 'dineout2018@gmail.com',// req.body.email
                 subject: 'Sending Email using Node.js test mail',
                 // text: 'That was easy node class Today!'
 
@@ -245,7 +245,7 @@ router.post('/KitchenSignInLogout', async (req, res, next) => {
     //console.log(req.body['x-access-token'],"--------",req.headers)
     //jwt.destroy(req.body['x-access-token'])
 
-    return res.status(200).json({ errors: [{ "msg": 'Logout sucessfuly' }] });
+    return res.status(200).json({ success: { "msg": 'Logout sucessfuly', logout: true } });
 
 });
 
