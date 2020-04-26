@@ -274,7 +274,7 @@ router.post('/KitchenLogin',CustomerSignInValidations,async (req, res, next) => 
     let admin = await KitchenSignupSchema.findOne({ email: req.body.email, status: true });
     if (admin == null) {
 
-        return res.status(200).json({ errors:[{"msg": 'That admin dose not exisits! Or deactivated, Please check login details' }]});
+        return res.status(200).json({ errors:[{"msg": 'That admin dose not exisits! Or deactivated, Please contact Administrator' }]});
 
     }
     let compPassword = bcrypt.compareSync(req.body.password, admin.password)
