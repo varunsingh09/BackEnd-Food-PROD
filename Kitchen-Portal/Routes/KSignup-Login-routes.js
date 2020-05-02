@@ -23,7 +23,7 @@ router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) 
 
 
     if (!errors.isEmpty()) {
-        return res.status(200).json({ errors: errors.array({ onlyFirstError: true }) });
+        return res.status(401).json({ errors: errors.array({ onlyFirstError: true }) });
     }
 
 
@@ -57,7 +57,7 @@ router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) 
 
 
     if (IsalreadyExist) {
-        return res.status(200).json({ errors: ErrMsg });
+        return res.status(401).json({ errors: ErrMsg });
 
         // return res.status(200).json({ errors: [{'msg': ErrMsg+ ' already exist in database,please use unique with group'}] });
 
@@ -203,7 +203,7 @@ router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) 
 
             if (error.name === 'MongoError' && error.code === 11000) {
                 let ermsg = error.errmsg.replace(str, `Duplicate key `).replace(/[':'",.<>\{\}\[\]\\\/]/gi, "").replace('dup key', '').replace('_1', ' :')
-                return res.status(200).json({ errors: [{ 'msg': ermsg }] });
+                return res.status(401).json({ errors: [{ 'msg': ermsg }] });
             } else {
                 next(error);
             }
@@ -222,15 +222,15 @@ router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) 
 
 
 router.post('/KitchenEmailVerify', async (req, res, next) => {
-    console.log("=========", req.body, "-----")
 
     // Check if this user already exisits
     let admin = await KitchenSignupSchema.findOne({ email: req.body.email, status: true });
     if (admin == null) {
 
-        return res.status(200).json({ errors: [{ "msg": 'That admin dose not exisits! Or deactivated, Please check login details' }] });
+        return res.status(401).json({ errors: [{ "msg": 'That admin dose not exisits! Or deactivated, Please check login details' }] });
 
     }
+    return res.status(200).json({ success: [{ "msg": 'Successfully Verified' }] });
 
 });
 
@@ -264,7 +264,7 @@ router.post('/KitchenLogin', CustomerSignInValidations, async (req, res, next) =
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        return res.status(200).json({ errors: errors.array({ onlyFirstError: true }) });
+        return res.status(401).json({ errors: errors.array({ onlyFirstError: true }) });
     }
 
 
@@ -272,14 +272,14 @@ router.post('/KitchenLogin', CustomerSignInValidations, async (req, res, next) =
     let admin = await KitchenSignupSchema.findOne({ email: req.body.email, status: true });
     if (admin == null) {
 
-        return res.status(200).json({ errors: [{ "msg": 'That admin dose not exisits! Or deactivated, Please contact Administrator' }] });
+        return res.status(401).json({ errors: [{ "msg": 'That admin dose not exisits! Or deactivated, Please contact Administrator' }] });
 
     }
     let compPassword = bcrypt.compareSync(req.body.password, admin.password)
 
     if (compPassword == false) {
 
-        return res.status(200).json({ errors: [{ "msg": 'Incorrect Password!! Or  Account deactivated, Please check login details' }] });
+        return res.status(401).json({ errors: [{ "msg": 'Incorrect Password!! Or  Account deactivated, Please check login details' }] });
 
     } else {
 
@@ -316,11 +316,75 @@ router.post('/verifyEmail', async (req, res, next) => {
             return next(err)
         }
     } else {
-        res.status(200).send({ "error": 'Something is missing.', updated: false, });
+        res.status(401).send({ "error": 'Something is missing.', updated: false, });
     }
 
 
 });
+
+
+router.get('/sendemail', async (req, res, next) => {
+
+    try {
+       
+        let transporter = nodemailer.createTransport(
+            {
+                host: 'email-smtp.us-east-1.amazonaws.com',
+                port: 587,
+                secure: false,
+                auth: {
+                    user: 'AKIAZWO7Y2UN45JCVY6W',
+                    pass: 'BBJA0+1Kz96qeXYoIyxjqT34nyN0YqoeJcckiVYrSXHC'
+                },
+                logger: false,
+                debug: true // include SMTP traffic in the logs
+            },
+            {
+                // default message fields
+    
+                // sender info
+                from: 'Nodemailer <varun.imcl@gmail.com>',
+                headers: {
+                    'X-Laziness-level': 1000 // just an example header, no need to use this
+                }
+            }
+        );
+
+
+        let message = {
+
+            to: 'Nodemailer <singh.varun1985@gmail.com>',
+
+            // Subject of the message
+            subject: 'Nodemailer is unicode friendly ✔' + Date.now(),
+
+            // plaintext body
+            text: 'Hello to myself!',
+
+            // HTML body
+            html: `<p><b>Hello</b> to myself <img src="cid:note@example.com"/></p>
+        <p>Here's a nyan cat for you as an embedded attachment:<br/><img src="cid:nyan@example.com"/></p>`,
+        }
+        transporter.sendMail(message, (error, info) => {
+            if (error) {
+                console.log('Error occurred');
+                console.log(error.message);
+                return process.exit(1);
+            }
+
+            console.log('Message sent successfully!');
+            console.log(nodemailer.getTestMessageUrl(info));
+
+            // only needed when using pooled connections
+            transporter.close();
+        });
+
+    } catch (err) {
+        return next(err)
+    }
+
+});
+
 
 
 

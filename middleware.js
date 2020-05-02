@@ -47,7 +47,7 @@ module.exports = {
         var token = jwt.sign({ id: userId }, config.secret, {
             expiresIn: 86400 // expires in 24 hours
         });
-        res.send({ token: token, admin: admin })
+        res.send({ errors: "error", token: token, admin: admin })
         return next();
 
     },
