@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "mocha --timeout 15000",
+    "test": "mocha --timeout 25000",
     "start": "node index.js"
   },
   "author": "",

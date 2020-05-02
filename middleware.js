@@ -41,13 +41,13 @@ module.exports = {
 
     },
 
-    jwtSignin: function (req, res,next, { userId,admin }) {
-        //console.log("come",userId)
+
+    jwtSignin: function (req, res, next, { userId, admin }) {
 
         var token = jwt.sign({ id: userId }, config.secret, {
             expiresIn: 86400 // expires in 24 hours
         });
-        res.send({token:token,admin:admin})
+        res.send({ errors: "error", token: token, admin: admin })
         return next();
 
     },
@@ -56,16 +56,16 @@ module.exports = {
 
     // Validation middleware check method for validation
     validateMeChecks: [
-        check('email','Email is required.').not().isEmpty().isEmail().withMessage('Please check email.'),
+        check('email', 'Email Cannot be empty.').not().isEmpty().isEmail().withMessage('Email is not valid'),
         //check('email').not().isEmpty().withMessage('Can not levave black').isEmail('Wrong email format'),
         //isLength({ min: 3, max: 50 }).withMessage('Name length in between 3 to 50 chars'),
-        check('password').not().isEmpty().withMessage('Password Cant be Empty!!'),
-        check('zipcode').not().isEmpty().withMessage('Zipcode cant be Empty!!').isLength({ min: 3, max: 5 }).withMessage('Name length in between 3 to 5 chars'),
+        check('password').not().isEmpty().withMessage('Password Cant be Empty!').isLength({ min: 3, max: 5 }).withMessage('Password length in between 3 to 5 chars'),
+        check('zipcode').not().isEmpty().withMessage('Zipcode cant be Empty!').isLength({ min: 3, max: 6 }).withMessage('Zipcode length in between 3 to 6 chars'),
 
     ],
 
     validateMealPackageFields: [
-        check('package_type','Package Type is required 1.').not().isEmpty().withMessage('Please check Package Type.'),
+        check('package_type', 'Package Type is required 1.').not().isEmpty().withMessage('Please check Package Type.'),
         //check('email').not().isEmpty().withMessage('Can not levave black').isEmail('Wrong email format'),
         //isLength({ min: 3, max: 50 }).withMessage('Name length in between 3 to 50 chars'),
         check('days').not().isEmpty().withMessage('Days Cant be Empty!!'),
@@ -74,7 +74,7 @@ module.exports = {
     ],
 
     CustomerSignInValidations: [
-        check('email','Email is required.').not().isEmpty().isEmail().withMessage('Please check email.'),
+        check('email', 'Email is required.').not().isEmpty().isEmail().withMessage('Please check email.'),
         //check('email').not().isEmpty().withMessage('Can not levave black').isEmail('Wrong email format'),
         //isLength({ min: 3, max: 50 }).withMessage('Name length in between 3 to 50 chars'),
         check('password').not().isEmpty().withMessage('Password Cant be Empty!!'),
@@ -86,16 +86,15 @@ module.exports = {
 
 
     item_type: [{ value: 'MainCourse', label: 'MainCourse' },
-    {value: 'Sides', label:'Sides'},
-    {value: 'Beverages', label:'Beverages'}],
+    { value: 'Sides', label: 'Sides' },
+    { value: 'Beverages', label: 'Beverages' }],
 
-    serving_temp: [{value:'Hot', label: 'Hot'},{value:'Cold', label: 'Cold'},{value:'Frozen', label: 'Frozen'}],
-    allergic_ingredients: [{value:'Nuts', label: 'Nuts'},{value:'Milk', label: 'Milk'},{value:'Soya', label: 'Soya'},{value:'None', label: 'None'}],
-    special_markings: [{value:'Veg', label: 'Veg'},{value:'NoVeg', label: 'NonVeg'},{value:'None', label: 'None'}],
+    serving_temp: [{ value: 'Hot', label: 'Hot' }, { value: 'Cold', label: 'Cold' }, { value: 'Frozen', label: 'Frozen' }],
+    allergic_ingredients: [{ value: 'Nuts', label: 'Nuts' }, { value: 'Milk', label: 'Milk' }, { value: 'Soya', label: 'Soya' }, { value: 'None', label: 'None' }],
+    special_markings: [{ value: 'Veg', label: 'Veg' }, { value: 'NoVeg', label: 'NonVeg' }, { value: 'None', label: 'None' }],
 
 
 
-    serving_zipcodes:[60045,60066,60067,6004,8007,45005,45006,45007,45008,45009],
-
+    serving_zipcodes: [60045, 60066, 60067, 6004, 8007, 45005, 45006, 45007, 45008, 45009],
 
 }
