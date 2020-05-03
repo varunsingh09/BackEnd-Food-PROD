@@ -125,19 +125,19 @@ router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) 
 
 
 
-// Email verfy Kitchen Login 
+// Email send Kitchen Login 
 // This Api we are using on kitchen login page to validate email on the fly.
 // Post -localhost:3001/kitchen/KitchenEmailVerify
 
 
 router.post('/KitchenSendEmail', async (req, res, next) => {
 
-    console.log(req.body._id)
+    //console.log(req.body._id)
     // Check if this user already exisits
     let admin = await KitchenSignupSchema.findOne({ _id: req.body._id, status: false });
     if (admin == null) {
 
-        return res.status(401).json({ errors: [{ "msg": 'That admin dose not exisits! Or deactivated, Please check login details' }] });
+        return res.status(401).json({ errors: [{ "msg": 'That admin dose not exisits! Or deactivated, Please resend email' }] });
 
     }
 

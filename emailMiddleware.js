@@ -1,10 +1,12 @@
 var nodemailer = require('nodemailer');
+require('dotenv').config();
 const { CaptureErrorsSchema } = require('./Common-Model-Routes/Models/Error.model')
 
 module.exports = {
 
     sendEmail: function (req, res, next, { admin }) {
         //sending email from 
+
         var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -12,13 +14,13 @@ module.exports = {
                 pass: 'dineout@2018'
             }
         });
-        let href = `http://localhost:3001/kitchen/verifyEmail/?id=${admin._id}`
+        let href = `http://localhost:${process.env.PORT}/kitchen/verifyEmail/?id=${admin._id}`
 
         // sending mail to 
         var mailOptions = {
             from: 'dineout2018@gmail.com',
-            to: 'dineout2018@gmail.com',// req.body.email
-            subject: 'Sending Email using Node.js test mail',
+            to: admin.email,
+            subject: 'Sending Email from Kitchen Portal',
             // text: 'That was easy node class Today!'
 
 
@@ -57,11 +59,11 @@ module.exports = {
                         </head>
                         <body>
                         
-                        <h2 style="text-align:center">Welcome ${req.body.firstName}</h2>
+                        <h2 style="text-align:center">Welcome ${admin.kitchen_name}</h2>
                         
                         <div class="card">
                             <img src="https://www.w3schools.com/w3images/team2.jpg" alt="John" style="width:100%">
-                            <h1>${req.body.firstName}</h1>
+                            <h1>${admin.kitchen_name}</h1>
                             <p class="title">Thanku.</p>
                         
                             <button><a href=${href} active">Verify Email</a></button>
@@ -71,7 +73,7 @@ module.exports = {
                     </html>`
 
         };
-
+        console.log(mailOptions)
         //sending email method or function
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
