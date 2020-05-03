@@ -1,10 +1,10 @@
 const express = require('express');
-var nodemailer = require('nodemailer');
 const router = express.Router();
 const { KitchenSignupSchema } = require('./../../Kitchen-Portal/Models/KSignup-model')
 //const { validateMeChecks } = require('./../middleware')
 const { validationResult } = require("express-validator/check");
 const { jwtSignin, jwtVerifyToken, validateMeChecks, CustomerSignInValidations } = require('./../../middleware')
+const { sendEmail } = require('./../../emailMiddleware')
 const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Error.model')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -83,98 +83,7 @@ router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) 
 
             await admin.save();
 
-
-
-            //sending email from 
-            var transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    user: 'dineout2018@gmail.com',
-                    pass: 'dineout@2018'
-                }
-            });
-            let href = `http://localhost:3001/kitchen/verifyEmail/?id=${admin._id}`
-
-            // sending mail to 
-            var mailOptions = {
-                from: 'dineout2018@gmail.com',
-                to: 'dineout2018@gmail.com',// req.body.email
-                subject: 'Sending Email using Node.js test mail',
-                // text: 'That was easy node class Today!'
-
-
-                //html for email
-
-                html: `<!DOCTYPE html>
-                            <html>
-                            <head>
-                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-                            <style>
-                            .card {
-                                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-                                max-width: 300px;  margin: auto;  text-align: center; font-family: arial;
-                            }
-                            
-                            .title { color: grey;font-size: 18px;
-                            }
-                            
-                            p {
-                                border: none; outline: 0;
-                                display: inline-block;padding: 8px;
-                                color: white;  background-color: #000;text-align: center;
-                                cursor: pointer;  width: 100%; font-size: 18px;
-                            }
-                            
-                            button {
-                                text-decoration: none;
-                                font-size: 22px;
-                                color: black;
-                            }
-                            
-                            button:hover, a:hover {
-                                opacity: 0.7;
-                            }
-                            </style>
-                            </head>
-                            <body>
-                            
-                            <h2 style="text-align:center">Welcome ${req.body.firstName}</h2>
-                            
-                            <div class="card">
-                                <img src="https://www.w3schools.com/w3images/team2.jpg" alt="John" style="width:100%">
-                                <h1>${req.body.firstName}</h1>
-                                <p class="title">Thanku.</p>
-                            
-                                <button><a href=${href} active">Verify Email</a></button>
-                            </div>
-                            
-                            </body>
-                        </html>`
-
-            };
-
-            //sending email method or function
-            transporter.sendMail(mailOptions, function (error, info) {
-                if (error) {
-
-                    // this will capture if error comes in email sent 
-                    errs = new CaptureErrorsSchema({
-                        error: error,
-                        errorRoute: 'KitchenSignup ',
-                        errorMethod: 'Transporter_email',
-                        email: req.body.email,
-                        kitchen_name: req.body.kitchen_name
-
-
-                    });
-
-
-                    errs.save();
-
-                } else {
-                    console.log('Email sent: ' + info.response);
-                }
-            });
+            sendEmail(req, res, next, { admin: admin })
 
 
             return res.status(200).send({ success: admin, 'route': 'https://yahoo.com', 'Msg': 'Successfully Created Master User' });
@@ -221,16 +130,18 @@ router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) 
 // Post -localhost:3001/kitchen/KitchenEmailVerify
 
 
-router.post('/KitchenEmailVerify', async (req, res, next) => {
+router.post('/KitchenSendEmail', async (req, res, next) => {
 
+    console.log(req.body._id)
     // Check if this user already exisits
-    let admin = await KitchenSignupSchema.findOne({ email: req.body.email, status: true });
+    let admin = await KitchenSignupSchema.findOne({ _id: req.body._id, status: false });
     if (admin == null) {
 
         return res.status(401).json({ errors: [{ "msg": 'That admin dose not exisits! Or deactivated, Please check login details' }] });
 
     }
-    return res.status(200).json({ success: [{ "msg": 'Successfully Verified' }] });
+
+    sendEmail(req, res, next, { admin: admin })
 
 });
 
@@ -322,68 +233,6 @@ router.post('/verifyEmail', async (req, res, next) => {
 
 });
 
-
-router.get('/sendemail', async (req, res, next) => {
-
-    try {
-       
-        let transporter = nodemailer.createTransport(
-            {
-                host: 'email-smtp.us-east-1.amazonaws.com',
-                port: 587,
-                secure: false,
-                auth: {
-                    user: 'AKIAZWO7Y2UN45JCVY6W',
-                    pass: 'BBJA0+1Kz96qeXYoIyxjqT34nyN0YqoeJcckiVYrSXHC'
-                },
-                logger: false,
-                debug: true // include SMTP traffic in the logs
-            },
-            {
-                // default message fields
-    
-                // sender info
-                from: 'Nodemailer <varun.imcl@gmail.com>',
-                headers: {
-                    'X-Laziness-level': 1000 // just an example header, no need to use this
-                }
-            }
-        );
-
-
-        let message = {
-
-            to: 'Nodemailer <singh.varun1985@gmail.com>',
-
-            // Subject of the message
-            subject: 'Nodemailer is unicode friendly ✔' + Date.now(),
-
-            // plaintext body
-            text: 'Hello to myself!',
-
-            // HTML body
-            html: `<p><b>Hello</b> to myself <img src="cid:note@example.com"/></p>
-        <p>Here's a nyan cat for you as an embedded attachment:<br/><img src="cid:nyan@example.com"/></p>`,
-        }
-        transporter.sendMail(message, (error, info) => {
-            if (error) {
-                console.log('Error occurred');
-                console.log(error.message);
-                return process.exit(1);
-            }
-
-            console.log('Message sent successfully!');
-            console.log(nodemailer.getTestMessageUrl(info));
-
-            // only needed when using pooled connections
-            transporter.close();
-        });
-
-    } catch (err) {
-        return next(err)
-    }
-
-});
 
 
 
