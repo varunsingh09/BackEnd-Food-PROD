@@ -36,6 +36,7 @@ module.exports = {
 
         jwt.verify(refreshToken, config.refresh_token, function (err, decoded) {
             if (err) return res.status(403).send({ auth: false, message: 'The client was not authorized to access the webpage.' });
+            
             var accessToken = jwt.sign({ id: userId }, config.refresh_token);
             res.status(200).send({ success: "success", token: accessToken })
         });
@@ -43,7 +44,7 @@ module.exports = {
     },
 
     jwtSignin: function (req, res, next, { userId, admin }) {
-        
+
         var token = jwt.sign({ id: userId }, config.secret, {
             expiresIn: '2s' // expires in 15 second
         });

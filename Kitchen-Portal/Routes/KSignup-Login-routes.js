@@ -147,20 +147,17 @@ router.post('/KitchenSendEmail', async (req, res, next) => {
 });
 
 
-
 //logout kitchen - to delete token from server 
 // this code is pending ,incomplete code , this has to delete token from server side 
 // this url you will see at kitchen sign in page 
 
-router.post('/KitchenSignInLogout', async (req, res, next) => {
+router.delete('/KitchenSignInLogout', async (req, res, next) => {
 
-    //console.log(req.body['x-access-token'],"--------",req.headers)
-    //jwt.destroy(req.body['x-access-token'])
-
-    return res.status(200).json({ success: { "msg": 'Logout sucessfuly', logout: true } });
+    accessToken  = req.headers['x-access-token']
+    refreshTokens.filter(token=>console.log(token!==accessToken))
+    return res.status(201).send({ success: { "msg": 'Logout sucessfuly', logout: true } });
 
 });
-
 
 
 // Kitchen Login 
