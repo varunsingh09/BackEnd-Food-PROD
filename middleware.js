@@ -9,7 +9,7 @@ const multer = require('multer');
 //end here====
 //use for uplaod image
 
-
+let refreshTokens = []
 
 
 // Multer use for image upload set image directory location
@@ -30,25 +30,28 @@ module.exports = {
 
 
     jwtVerifyToken: function (req, res, next) {
-        //console.log('come inside verify token' , req)
-        var token = req.headers['x-access-token'];
-        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
+        //console.log('come inside verify token', refreshTokens)
+        let userId = req.body_user_id
+        var refreshToken = req.headers['x-access-token'];
 
-        jwt.verify(token, config.secret, function (err, decoded) {
-            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
-            return next();
+        jwt.verify(refreshToken, config.refresh_token, function (err, decoded) {
+            if (err) return res.status(403).send({ auth: false, message: 'The client was not authorized to access the webpage.' });
+            var accessToken = jwt.sign({ id: userId }, config.refresh_token);
+            res.status(200).send({ success: "success", token: accessToken })
         });
-
+        next();
     },
 
-
     jwtSignin: function (req, res, next, { userId, admin }) {
-
+        
         var token = jwt.sign({ id: userId }, config.secret, {
-            expiresIn: 86400 // expires in 24 hours
+            expiresIn: '2s' // expires in 15 second
         });
-        res.send({ errors: "error", token: token, admin: admin })
-        return next();
+
+        var refreshToken = jwt.sign({ id: userId }, config.refresh_token);
+        refreshTokens.push(refreshToken)
+        return res.status(200).send({ success: "success", token: token, refreshToken: refreshToken, admin: admin })
+        next();
 
     },
     upload: multer({ storage: storage }),
@@ -96,5 +99,5 @@ module.exports = {
 
 
     serving_zipcodes: [60045, 60066, 60067, 6004, 8007, 45005, 45006, 45007, 45008, 45009],
-
+    refreshTokens: refreshTokens
 }

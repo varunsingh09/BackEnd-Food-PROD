@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 var morgan = require('morgan')
 var cors = require('cors')
-const port = process.env.PORT || 3002;
+const port = 3001;
 var bodyParser = require('body-parser');
 const session = require('express-session')
 
