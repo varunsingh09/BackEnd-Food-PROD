@@ -2,56 +2,90 @@ const jwt = require('jsonwebtoken')
 var config = require('./config');
 
 
-let refreshTokens = []
+let tokenList = {}
 
 
 module.exports = {
 
-    jwtVerifyToken: function (req, res, next) {
-
-        let userId = req.body_user_id
-        let { authorization } = req.headers
-        const token = authorization && authorization.split(' ')[1]
-
-        if (!token && token === undefined) return res.status(401).send({ errors: [{ "msg": 'No token provided.' }] });
-
-        jwt.verify(token, config.REFRESH_TOKEN_SECRET, (err, user) => {
-            if (err) return res.status(403).send({ errors: [{ auth: false, "msg": 'The client was not authorized to access the webpage.' }] });
-
-            const accessToken = jwt.sign({ id: userId }, config.ACCESS_TOKEN_SECRET, { expiresIn: config.EXPIRE_TIME });
-            res.status(200).send({ success: "success", token: accessToken })
-        });
-
-    },
-
     jwtSignin: function (req, res, next, { userId, admin }) {
 
-        const accessToken = jwt.sign({ id: userId }, config.ACCESS_TOKEN_SECRET, { expiresIn: config.EXPIRE_TIME });
-        const refreshToken = jwt.sign({ id: userId }, config.REFRESH_TOKEN_SECRET);
+        const user = { id: userId }
+        // do the database authentication here, with user name and password combination.
+        const token = jwt.sign(user, config.ACCESS_TOKEN_SECRET, { expiresIn: config.ACCESS_TOKEN_LIFE })
+        const refreshToken = jwt.sign(user, config.REFRESH_TOKEN_SECRET, { expiresIn: config.REFRESH_TOKEN_LIFE })
 
-        refreshTokens.push(refreshToken);
-        res.status(200).send({ success: "success", access_token: accessToken, refresh_token: refreshToken, admin: admin })
+        const response = {
+            "token": token,
+            "refreshToken": refreshToken,
+        }
+
+        tokenList[refreshToken] = response
+
+        res.status(200).send({ success: "success", token: token, refreshToken: refreshToken, admin: admin })
 
     },
 
+    jwtVerifyToken: function (req, res, next) {
+        let { authorization } = req.headers
+        const refreshToken = authorization && authorization.split(' ')[1]
+        //console.log(refreshToken, "====", tokenList)
+        if (refreshToken in tokenList) {
+            let userId = req.body_user_id
+            const user = { id: userId }
+
+            const token = jwt.sign(user, config.ACCESS_TOKEN_SECRET, { expiresIn: config.ACCESS_TOKEN_LIFE })
+
+            // update the token in the list
+            tokenList[refreshToken].token = token
+
+            res.status(200).send({ success: "success", token: token })
+        } else {
+            if (!refreshToken && refreshToken === undefined) return res.status(401).send({ errors: [{ "msg": 'No token provided.' }] });
+        }
+
+    },
 
 
     authenticateToken: function (req, res, next) {
-        let { authorization } = req.headers
-        const token = authorization && authorization.split(' ')[1]
 
-        //console.log(token)
-        if (!token && token === undefined) return res.status(401).send({ errors: [{ "msg": 'No token provided.' }] });
-            
-            jwt.verify(token, config.REFRESH_TOKEN_SECRET, (err, user) => {
-                if (err) return res.status(403).send({ errors: [{ auth: false, "msg": 'The client was not authorized to access the webpage.' }] });
+        let  authHeader  = req.body['authorization'] || req.query['authorization'] || req.headers['authorization']
 
-                req.user = user;
+        const token = authHeader && authHeader.split(' ')[1]
+        // decode token
+
+        if (token) {
+            // verifies secret and checks exp
+            jwt.verify(token, config.REFRESH_TOKEN_SECRET, { expiresIn: config.REFRESH_TOKEN_LIFE } ,function (err, decoded) {
+
+                if (err) {
+                    return res.status(403).send({ errors: [{ auth: false, "msg": 'The client was not authorized to access the webpage.' }] });
+                }
+                req.decoded = decoded;
                 next();
+
             });
+        } else {
+            // if there is no token
+            // return an error
+            if (!token && token === undefined) return res.status(401).send({ errors: [{ "msg": 'No token provided.' }] });
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     },
 
-    refreshTokens: refreshTokens,
+    tokenList: tokenList,
 
 }
