@@ -33,7 +33,7 @@ router.get('/readJsonFile', async (req, res) => {
 
   //exports.readJsonFile =async function (req, res) {
   var directoryName = __dirname;
-  let reqPath = path.join(__dirname, '../../data.json');
+  let reqPath = path.join(__dirname, './../../utills/data.json');
 
   var objJson = await JSON.parse(fs.readFileSync(reqPath, 'utf8'));
   for (var key in objJson) {
