@@ -1,6 +1,6 @@
 var nodemailer = require('nodemailer');
 require('dotenv').config();
-const { CaptureErrorsSchema } = require('./Common-Model-Routes/Models/Error.model')
+const { CaptureErrorsSchema } = require('./../Common-Model-Routes/Models/Error.model')
 
 module.exports = {
 

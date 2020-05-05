@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { StateCitySchema } = require('./../../Common-Model-Routes/Models/StateCity.model');
-const { authenticateToken } = require('./../../jwtMiddleware')
+const { authenticateToken } = require('./../../middleware/jwtMiddleware')
 
 const path = require('path');
 const fs = require('fs')
