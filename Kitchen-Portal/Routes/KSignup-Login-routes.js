@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { KitchenSignupSchema } = require('./../../Kitchen-Portal/Models/KSignup-model')
-//const { validateMeChecks } = require('./../middleware')
 const { validationResult } = require("express-validator/check");
-const { jwtSignin, jwtVerifyToken, validateMeChecks, CustomerSignInValidations,refreshTokens } = require('./../../middleware')
+const { validateMeChecks, CustomerSignInValidations } = require('./../../middleware')
 const { sendEmail } = require('./../../emailMiddleware')
+const { jwtSignin, jwtVerifyToken, refreshTokens } = require('./../../jwtMiddleware')
 const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Error.model')
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
 const rounds = 10
 
 //const { redisSetKey, client } = require('./../../redis')
@@ -153,8 +152,8 @@ router.post('/KitchenSendEmail', async (req, res, next) => {
 
 router.delete('/KitchenSignInLogout', async (req, res, next) => {
 
-    accessToken  = req.headers['x-access-token']
-    refreshTokens.filter(token=>console.log(token!==accessToken))
+    accessToken = req.headers['x-access-token']
+    refreshTokens.filter(token => console.log(token !== accessToken))
     return res.status(201).send({ success: { "msg": 'Logout sucessfuly', logout: true } });
 
 });
@@ -194,9 +193,7 @@ router.post('/KitchenLogin', CustomerSignInValidations, async (req, res, next) =
 
         try {
             let token = jwtSignin(req, res, next, { adminId: adminId, admin: admin })
-            //console.log("----",token)
-            //res.setHeader('Content-Type', 'text/plain');
-            // return res.send({ auth: true, admin,token:token });
+
         } catch (err) {
             return next(err)
         }
@@ -239,11 +236,7 @@ router.post('/verifyEmail', async (req, res, next) => {
 
 router.post('/token', async (req, res, next) => {
 
-    const refreshToken = req.headers['x-access-token']
-    if (refreshToken === undefined) return res.status(401).send({ errors: 'No token provided.' });
-    //console.log("--",refreshTokens,"---")
-    if (Array.isArray(refreshTokens) && refreshTokens.length===0 ) return res.status(403).send({ errors: 'The client was not authorized to access the webpage.' });
-    jwtVerifyToken(req,res,next)
+    jwtVerifyToken(req, res, next)
 });
 
 

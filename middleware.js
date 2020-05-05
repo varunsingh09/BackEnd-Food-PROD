@@ -1,15 +1,10 @@
-const jwt = require('jsonwebtoken')
-var config = require('./config');
 const { check } = require('express-validator/check');
-
 
 
 //use for uplaod image
 const multer = require('multer');
 //end here====
 //use for uplaod image
-
-let refreshTokens = []
 
 
 // Multer use for image upload set image directory location
@@ -24,39 +19,9 @@ var storage = multer.diskStorage({
 
 
 
-
-
 module.exports = {
 
-
-    jwtVerifyToken: function (req, res, next) {
-        //console.log('come inside verify token', refreshTokens)
-        let userId = req.body_user_id
-        var refreshToken = req.headers['x-access-token'];
-
-        jwt.verify(refreshToken, config.refresh_token, function (err, decoded) {
-            if (err) return res.status(403).send({ auth: false, message: 'The client was not authorized to access the webpage.' });
-            
-            var accessToken = jwt.sign({ id: userId }, config.refresh_token);
-            res.status(200).send({ success: "success", token: accessToken })
-        });
-        next();
-    },
-
-    jwtSignin: function (req, res, next, { userId, admin }) {
-
-        var token = jwt.sign({ id: userId }, config.secret, {
-            expiresIn: '2s' // expires in 15 second
-        });
-
-        var refreshToken = jwt.sign({ id: userId }, config.refresh_token);
-        refreshTokens.push(refreshToken)
-        return res.status(200).send({ success: "success", token: token, refreshToken: refreshToken, admin: admin })
-        next();
-
-    },
     upload: multer({ storage: storage }),
-
 
     // Validation middleware check method for validation
     validateMeChecks: [
@@ -89,16 +54,33 @@ module.exports = {
 
 
 
-    item_type: [{ value: 'MainCourse', label: 'MainCourse' },
-    { value: 'Sides', label: 'Sides' },
-    { value: 'Beverages', label: 'Beverages' }],
+    item_type: [
+        { value: 'MainCourse', label: 'MainCourse' },
+        { value: 'Sides', label: 'Sides' },
+        { value: 'Beverages', label: 'Beverages' }
+    ],
 
-    serving_temp: [{ value: 'Hot', label: 'Hot' }, { value: 'Cold', label: 'Cold' }, { value: 'Frozen', label: 'Frozen' }],
-    allergic_ingredients: [{ value: 'Nuts', label: 'Nuts' }, { value: 'Milk', label: 'Milk' }, { value: 'Soya', label: 'Soya' }, { value: 'None', label: 'None' }],
-    special_markings: [{ value: 'Veg', label: 'Veg' }, { value: 'NoVeg', label: 'NonVeg' }, { value: 'None', label: 'None' }],
+    serving_temp: [
+        { value: 'Hot', label: 'Hot' },
+        { value: 'Cold', label: 'Cold' },
+        { value: 'Frozen', label: 'Frozen' }
+    ],
+
+    allergic_ingredients: [
+        { value: 'Nuts', label: 'Nuts' },
+        { value: 'Milk', label: 'Milk' },
+        { value: 'Soya', label: 'Soya' },
+        { value: 'None', label: 'None' }
+    ],
+
+    special_markings: [
+        { value: 'Veg', label: 'Veg' },
+        { value: 'NoVeg', label: 'NonVeg' },
+        { value: 'None', label: 'None' }
+    ],
 
 
 
     serving_zipcodes: [60045, 60066, 60067, 6004, 8007, 45005, 45006, 45007, 45008, 45009],
-    refreshTokens: refreshTokens
+
 }
