@@ -4,7 +4,7 @@ const { KitchenSignupSchema } = require('./../../Kitchen-Portal/Models/KSignup-m
 const { validationResult } = require("express-validator/check");
 const { validateMeChecks, CustomerSignInValidations } = require('./../../middleware/utills')
 const { sendEmail } = require('./../../middleware/email')
-const { jwtSignin, jwtVerifyToken } = require('./../../middleware/jwt')
+const { jwtSignin, jwtVerifyToken ,tokenList} = require('./../../middleware/jwt')
 const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Error.model')
 const bcrypt = require('bcrypt')
 const rounds = 10
@@ -85,7 +85,6 @@ router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) 
 
             sendEmail(req, res, next, { admin: admin })
 
-
             return res.status(200).send({ success: admin, 'route': 'https://yahoo.com', 'Msg': 'Successfully Created Master User' });
 
 
@@ -140,6 +139,7 @@ router.post('/KitchenSendEmail', async (req, res, next) => {
         return res.status(401).json({ errors: [{ "msg": 'That admin dose not exisits! Or deactivated, Please resend email' }] });
 
     }
+    //console.log('come')
 
     sendEmail(req, res, next, { admin: admin })
 
@@ -150,10 +150,12 @@ router.post('/KitchenSendEmail', async (req, res, next) => {
 // this code is pending ,incomplete code , this has to delete token from server side 
 // this url you will see at kitchen sign in page 
 
-router.delete('/KitchenSignInLogout', async (req, res, next) => {
+router.post('/KitchenSignInLogout', async (req, res, next) => {
 
-    accessToken = req.headers['x-access-token']
-    refreshTokens.filter(token => console.log(token !== accessToken))
+    let accessToken = req.headers['Authorization']
+    let refresh_token = accessToken && accessToken.split(' ')[1]
+    //console.log( req.headers)
+    Object.values(tokenList).filter(token => token!==refresh_token)
     return res.status(201).send({ success: { "msg": 'Logout sucessfuly', logout: true } });
 
 });
@@ -166,7 +168,7 @@ router.delete('/KitchenSignInLogout', async (req, res, next) => {
 
 
 router.post('/KitchenLogin', CustomerSignInValidations, async (req, res, next) => {
-
+    console.log(req.body)
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {

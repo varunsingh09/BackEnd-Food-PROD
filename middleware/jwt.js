@@ -13,7 +13,7 @@ module.exports = {
         const user = { id: userId }
         // do the database authentication here, with user name and password combination.
         const token = jwt.sign(user, config.ACCESS_TOKEN_SECRET, { expiresIn: config.ACCESS_TOKEN_LIFE })
-        
+
         const refreshToken = jwt.sign(user, config.REFRESH_TOKEN_SECRET, { expiresIn: config.REFRESH_TOKEN_LIFE })
 
         tokenList[refreshToken] = refreshToken
@@ -23,12 +23,12 @@ module.exports = {
     },
 
     jwtVerifyToken: function (req, res, next) {
-        let { authorization } = req.headers
-        const refreshToken = authorization && authorization.split(' ')[1]
+        let { Authorization } = req.headers
+        const refreshToken = Authorization && Authorization.split(' ')[1]
         //console.log("jwtVerifyToken", tokenList)
 
         if (!refreshToken && refreshToken === undefined) return res.status(401).send({ errors: [{ "msg": 'No token provided.' }] });
-           
+
         if (refreshToken in tokenList) {
             let userId = req.body_user_id
             const user = { id: userId }
@@ -48,7 +48,7 @@ module.exports = {
 
     authenticateToken: function (req, res, next) {
 
-        let authHeader = req.body['authorization'] || req.query['authorization'] || req.headers['authorization']
+        let authHeader = req.body['Authorization'] || req.query['Authorization'] || req.headers['Authorization']
 
         const refresh_token = authHeader && authHeader.split(' ')[1]
         // decode token
@@ -69,20 +69,6 @@ module.exports = {
             // return an error
             if (!refresh_token && refresh_token === undefined) return res.status(401).send({ errors: [{ "msg": 'No token provided.' }] });
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     },
 

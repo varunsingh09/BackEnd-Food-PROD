@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 var morgan = require('morgan')
 var cors = require('cors')
-const port = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3001;
 var bodyParser = require('body-parser');
 const session = require('express-session')
 
@@ -129,6 +129,6 @@ app.use((error, req, res, next) => {
 
 
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`));
 
 module.exports = app;

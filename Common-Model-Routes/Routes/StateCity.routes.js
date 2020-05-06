@@ -50,7 +50,7 @@ router.get('/readJsonFile', async (req, res) => {
 // Get - /API/states/AllStateCity
 
 
-router.get('/AllStateCity', authenticateToken, async (req, res, next) => {
+router.get('/AllStateCity', /*authenticateToken,*/ async (req, res, next) => {
 
   try {
 

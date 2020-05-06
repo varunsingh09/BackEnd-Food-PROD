@@ -73,7 +73,7 @@ module.exports = {
                     </html>`
 
         };
-        console.log(mailOptions)
+        //console.log(mailOptions)
         //sending email method or function
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
@@ -88,14 +88,14 @@ module.exports = {
 
 
                 });
-
+                console.log(error)
 
                 errs.save();
-                return res.status(401).json({ errors: [{ "msg": error}] });
+                return res.status(401).send({ errors: [{ "msg": error}] });
 
             } else {
                 console.log('Email sent: ' + info.response);
-                return res.status(200).json({ success: [{ "msg": `Successfully send email ${info.response}` }] });
+                return res.status(200).send({ success: [{ "msg": `Successfully send email ${info.response}` }] });
             }
         });
 
