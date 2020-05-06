@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { ZipcodeKitchensSchema } = require('./../../MasterAdmin-Portal/Models/MZipcode-Kitchen.model')
 const { ProductSchema } = require('./../../MasterAdmin-Portal/Models/MProduct.model');
-const { serving_zipcodes, } = require('./../../middleware/utillsMiddleware')
+const { serving_zipcodes, } = require('./../../middleware/utills')
 const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Error.model')
 
 // Post 

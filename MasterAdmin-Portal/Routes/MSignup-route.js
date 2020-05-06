@@ -4,7 +4,7 @@ const router = express.Router();
 const { MasterSignupSchema } = require('../../MasterAdmin-Portal/Models/MSignup-model')
 
 const { validationResult } = require("express-validator/check");
-const { validateMeChecks } = require('./../../middleware/utillsMiddleware')
+const { validateMeChecks } = require('./../../middleware/utills')
 const bcrypt = require('bcrypt')
 const rounds = 10
 
