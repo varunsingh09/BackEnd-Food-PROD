@@ -3,7 +3,7 @@ var nodemailer = require('nodemailer');
 const router = express.Router();
 const { MasterSignupSchema } = require('../../MasterAdmin-Portal/Models/MSignup-model')
 
-const { validationResult } = require("express-validator/check");
+const { validationResult } = require("express-validator");
 const { validateMeChecks } = require('./../../middleware/utills')
 const bcrypt = require('bcrypt')
 const rounds = 10

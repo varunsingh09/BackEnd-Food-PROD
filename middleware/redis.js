@@ -1,47 +1,34 @@
-const REDIS_PORT = process.env.REDIS_PORT || 6379;
-
-var redis = require('redis')
-var client = redis.createClient(REDIS_PORT)
-
+const redis = require("redis");
+const redis_url = process.env.REDIS_PORT_WITH_URL || null;
+const client = redis.createClient(redis_url);
 client.on('error', function (err) {
     console.log('Error ' + err)
 })
 
 
 module.exports = {
-    redisSetKey: async function (key, value, time) {
-        if (key && value) {
-
-            await client.set(key, JSON.stringify(value), function (error, response) {
-                if (error) {
-                    console.log("Redis Error", error)
-                    return error;
-                }
-                console.log("Redis save message", response)
-            });
-
-        }
-    },
-
-
-    redisGetKey: function (key, req, res, next) {
-
-        let result = client.get(key, function (error, product) {
-            if (error) {
-                console.log(error)
-                return false;
-
+    getCached: (req, res, next) => {
+        const { redis_key } = req.headers
+        client.get(redis_key, function (err, reply) {
+            if (err) {
+                res.status(500).json({
+                    message: "Somethin Went Wrong"
+                })
             }
-            if (product) {
-                //res.json(JSON.parse(product));
-
-                res.send({ product: JSON.parse(product) });
-                next();
-
+            if (reply == null) {
+                next()
+            } else {
+                res.status(200).json({
+                    message: `Success Read ${redis_key}`,
+                    data: JSON.parse(reply)
+                })
             }
-
         });
     },
-
-    client: client
+    caching: (key, data) => {
+        client.set(key, JSON.stringify(data))
+    },
+    delCache: (key) => {
+        client.del(key)
+    }
 }

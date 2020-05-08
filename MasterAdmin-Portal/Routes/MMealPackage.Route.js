@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { MealPackagesSchema } = require('../../MasterAdmin-Portal/Models/MMealPackage.Model')
-const { validationResult } = require("express-validator/check");
+const { validationResult } = require("express-validator");
 const { validateMealPackageFields } = require('./../../middleware/utills')
 const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Error.model')
 const stripe = require('stripe')(process.env.StripeSecretKey);

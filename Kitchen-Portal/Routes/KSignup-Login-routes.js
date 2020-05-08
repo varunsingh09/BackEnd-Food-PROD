@@ -1,15 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { KitchenSignupSchema } = require('./../../Kitchen-Portal/Models/KSignup-model')
-const { validationResult } = require("express-validator/check");
+const { validationResult } = require("express-validator");
 const { validateMeChecks, CustomerSignInValidations } = require('./../../middleware/utills')
 const { sendEmail } = require('./../../middleware/email')
 const { jwtSignin, jwtVerifyToken ,tokenList} = require('./../../middleware/jwt')
 const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Error.model')
 const bcrypt = require('bcrypt')
 const rounds = 10
-
-//const { redisSetKey, client } = require('./../../redis')
+const { getCached, client } = require('./../../middleware/redis')
 
 
 
