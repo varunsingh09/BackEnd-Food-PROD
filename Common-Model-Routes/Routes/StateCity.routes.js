@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { StateCitySchema } = require('./../../Common-Model-Routes/Models/StateCity.model');
 const { authenticateToken } = require('./../../middleware/jwt')
+const redisClient = require('./../../middleware/redis')
+
 
 const path = require('path');
 const fs = require('fs')
@@ -50,7 +52,10 @@ router.get('/readJsonFile', async (req, res) => {
 // Get - /API/states/AllStateCity
 
 
-router.get('/AllStateCity', /*authenticateToken,*/ async (req, res, next) => {
+router.get('/AllStateCity',/*authenticateToken,*/ async (req, res, next) => {
+
+  const rawData = await redisClient.getAsync('city_list');
+  console.log("----", JSON.parse(rawData))
 
   try {
 
