@@ -68,10 +68,17 @@ router.get('/AllStateCity', async (req, res, next) => {
 
     let List = await StateCitySchema.find({}, { 'state': 1, 'cityList': 1, '_id': 0 }).lean(true).skip(0)
       .limit(0);
-    await client.setAsync('city_list', JSON.stringify(List));
 
-    if (List.length == 0) { res.status(200).send({ "errors": "No Record Found in State & City Database" }) }
-    else { res.status(200).send({ 'result': List }) }
+
+    if (List.length == 0) {
+
+      res.status(200).send({ "errors": "No Record Found in State & City Database" })
+
+    } else {
+      await client.setAsync('city_list', JSON.stringify(List));
+
+      res.status(200).send({ 'result': List })
+    }
 
   } catch (error) {
 

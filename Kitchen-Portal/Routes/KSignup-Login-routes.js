@@ -6,6 +6,7 @@ const { validateMeChecks, CustomerSignInValidations } = require('./../../middlew
 const { sendEmail } = require('./../../middleware/email')
 const { jwtSignin, jwtVerifyToken ,tokenList} = require('./../../middleware/jwt')
 const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Error.model')
+const client = require('./../../middleware/redis')
 const bcrypt = require('bcrypt')
 const rounds = 10
 
@@ -154,6 +155,8 @@ router.post('/KitchenSignInLogout', async (req, res, next) => {
     let accessToken = req.headers['Authorization']
     let refresh_token = accessToken && accessToken.split(' ')[1]
     //console.log( req.headers)
+    await client.delAsync('tokenList');
+    //console.log('deleted')
     Object.values(tokenList).filter(token => token!==refresh_token)
     return res.status(201).send({ success: { "msg": 'Logout sucessfuly', logout: true } });
 

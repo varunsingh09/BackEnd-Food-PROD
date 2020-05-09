@@ -26,13 +26,15 @@ module.exports = {
 
     },
 
-    jwtVerifyToken: function (req, res, next) {
-        let { Authorization } = req.headers
-        const refreshToken = Authorization && Authorization.split(' ')[1]
-        //console.log("jwtVerifyToken", tokenList)
+    jwtVerifyToken: async function (req, res, next) {
+        let { authorization } = req.headers
+        const refreshToken = authorization && authorization.split(' ')[1]
+        //console.log("jwtVerifyToken", req.headers)
 
-        let tokenData = client.getAsync('tokenList');
-        let tokenList = JSON.parse(tokenData)
+        let tokenData = await client.getAsync('tokenList');
+
+
+        let tokenList = tokenData === null ? {} : JSON.parse(tokenData)
 
 
         if (!refreshToken && refreshToken === undefined) return res.status(401).send({ errors: [{ "msg": 'No token provided.' }] });
@@ -45,8 +47,8 @@ module.exports = {
 
             // update the token in the list
             tokenList[refreshToken] = token
-            client.setAsync('tokenList', JSON.stringify(tokenList));
-            //console.log(refreshToken, "<<>>>", token, "====", tokenList)
+            await lient.setAsync('tokenList', JSON.stringify(tokenList));
+
             return res.status(200).send({ success: "success", refresh_token: token })
         } else {
             if (refreshToken && refreshToken !== undefined) return res.status(403).send({ errors: [{ auth: false, "msg": 'The client was not authorized to access the webpage.' }] });
@@ -57,7 +59,7 @@ module.exports = {
 
     authenticateToken: function (req, res, next) {
 
-        let authHeader = req.body['Authorization'] || req.query['Authorization'] || req.headers['Authorization']
+        let authHeader = req.body['authorization'] || req.query['authorization'] || req.headers['authorization']
 
         const refresh_token = authHeader && authHeader.split(' ')[1]
         // decode token
