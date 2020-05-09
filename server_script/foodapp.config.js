@@ -29,7 +29,6 @@ module.exports = {
       env_production: {
         NODE_ENV: "production",
       },
-      instances: 1,
       //exec_mode: "cluster"
       error_file: '/home/varun/log/server.log',
     },
