@@ -23,7 +23,6 @@ module.exports = {
       to: admin.email,
       subject: "Sending Email from Kitchen Portal",
       // text: 'That was easy node class Today!'
-
       //html for email
 
       html: `<!DOCTYPE html>
