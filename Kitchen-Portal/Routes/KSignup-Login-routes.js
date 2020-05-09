@@ -8,7 +8,7 @@ const { jwtSignin, jwtVerifyToken ,tokenList} = require('./../../middleware/jwt'
 const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Error.model')
 const bcrypt = require('bcrypt')
 const rounds = 10
-const { getCached, client } = require('./../../middleware/redis')
+
 
 
 
