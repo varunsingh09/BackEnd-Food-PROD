@@ -51,7 +51,7 @@ module.exports = {
 
             return res.status(200).send({ success: "success", refresh_token: token })
         } else {
-            if (refreshToken && refreshToken !== undefined) return res.status(403).send({ errors: [{ auth: false, "msg": 'The client was not authorized to access the webpage.' }] });
+            if (refreshToken && refreshToken != undefined) return res.status(403).send({ errors: [{ auth: false, "msg": 'The client was not authorized to access the webpage.' }] });
         }
 
     },

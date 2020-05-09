@@ -8,7 +8,6 @@ module.exports = {
       max_memory_restart: '1G',
       script:
         "./start.sh client --name ikram.foodapp",
-      watch: true,
       env: {
         NODE_ENV: "development",
       },
@@ -24,7 +23,6 @@ module.exports = {
       watch: true,
       max_memory_restart: '1G',
       script: "./start.sh server --name nodeserver",
-      watch: true,
       env: {
         NODE_ENV: "development",
       },
