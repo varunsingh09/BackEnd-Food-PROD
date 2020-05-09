@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 var config = require('./../utills/config');
+const client = require('./redis')
 
 
 let tokenList = {}
@@ -17,6 +18,9 @@ module.exports = {
         const refreshToken = jwt.sign(user, config.REFRESH_TOKEN_SECRET, { expiresIn: config.REFRESH_TOKEN_LIFE })
 
         tokenList[refreshToken] = refreshToken
+        //set token in cache
+        client.setAsync('tokenList', JSON.stringify(tokenList));
+
         //console.log("jwtSignin===>>", tokenList)
         return res.status(200).send({ success: "success", token: token, refresh_token: refreshToken, admin: admin })
 
@@ -26,6 +30,10 @@ module.exports = {
         let { Authorization } = req.headers
         const refreshToken = Authorization && Authorization.split(' ')[1]
         //console.log("jwtVerifyToken", tokenList)
+
+        let tokenData = client.getAsync('tokenList');
+        let tokenList = JSON.parse(tokenData)
+
 
         if (!refreshToken && refreshToken === undefined) return res.status(401).send({ errors: [{ "msg": 'No token provided.' }] });
 
@@ -37,6 +45,7 @@ module.exports = {
 
             // update the token in the list
             tokenList[refreshToken] = token
+            client.setAsync('tokenList', JSON.stringify(tokenList));
             //console.log(refreshToken, "<<>>>", token, "====", tokenList)
             return res.status(200).send({ success: "success", refresh_token: token })
         } else {
