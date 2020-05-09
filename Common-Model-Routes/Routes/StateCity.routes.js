@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { StateCitySchema } = require('./../../Common-Model-Routes/Models/StateCity.model');
 const { authenticateToken } = require('./../../middleware/jwt')
-const redisClient = require('./../../middleware/redis')
+const client = require('./../../middleware/redis')
 
 
 const path = require('path');
@@ -52,16 +52,23 @@ router.get('/readJsonFile', async (req, res) => {
 // Get - /API/states/AllStateCity
 
 
-router.get('/AllStateCity',/*authenticateToken,*/ async (req, res, next) => {
+router.get('/AllStateCity', async (req, res, next) => {
 
-  const rawData = await redisClient.getAsync('city_list');
-  console.log("----", JSON.parse(rawData))
+
+  const rawData = await client.getAsync('city_list');
+
+
+  if (rawData !== null) {
+    console.log("==", rawData, "----", JSON.parse(rawData))
+    let List = JSON.parse(rawData)
+    return res.status(200).send({ 'result': List })
+  }
 
   try {
 
     let List = await StateCitySchema.find({}, { 'state': 1, 'cityList': 1, '_id': 0 }).lean(true).skip(0)
       .limit(0);
-
+    await client.setAsync('city_list', JSON.stringify(List));
 
     if (List.length == 0) { res.status(200).send({ "errors": "No Record Found in State & City Database" }) }
     else { res.status(200).send({ 'result': List }) }
