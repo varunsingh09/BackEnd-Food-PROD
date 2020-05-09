@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { KitchenSignupSchema } = require('./../../Kitchen-Portal/Models/KSignup-model')
-//const { validateMeChecks } = require('./../middleware')
-const { validationResult } = require("express-validator/check");
-const { jwtSignin, jwtVerifyToken, validateMeChecks } = require('./../../middleware')
+
 const {CaptureErrorsSchema} = require('./../../Common-Model-Routes/Models/Error.model')
-//const { redisSetKey, client } = require('./../../redis')
 
 
 // KITCHEN LIST

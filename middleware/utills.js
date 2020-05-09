@@ -1,15 +1,10 @@
-const jwt = require('jsonwebtoken')
-var config = require('./config');
-const { check } = require('express-validator/check');
-
+const { check } = require('express-validator');
 
 
 //use for uplaod image
 const multer = require('multer');
 //end here====
 //use for uplaod image
-
-
 
 
 // Multer use for image upload set image directory location
@@ -24,35 +19,9 @@ var storage = multer.diskStorage({
 
 
 
-
-
 module.exports = {
 
-
-    jwtVerifyToken: function (req, res, next) {
-        //console.log('come inside verify token' , req)
-        var token = req.headers['x-access-token'];
-        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
-
-        jwt.verify(token, config.secret, function (err, decoded) {
-            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
-            return next();
-        });
-
-    },
-
-
-    jwtSignin: function (req, res, next, { userId, admin }) {
-
-        var token = jwt.sign({ id: userId }, config.secret, {
-            expiresIn: 86400 // expires in 24 hours
-        });
-        res.send({ errors: "error", token: token, admin: admin })
-        return next();
-
-    },
     upload: multer({ storage: storage }),
-
 
     // Validation middleware check method for validation
     validateMeChecks: [
@@ -85,13 +54,30 @@ module.exports = {
 
 
 
-    item_type: [{ value: 'MainCourse', label: 'MainCourse' },
-    { value: 'Sides', label: 'Sides' },
-    { value: 'Beverages', label: 'Beverages' }],
+    item_type: [
+        { value: 'MainCourse', label: 'MainCourse' },
+        { value: 'Sides', label: 'Sides' },
+        { value: 'Beverages', label: 'Beverages' }
+    ],
 
-    serving_temp: [{ value: 'Hot', label: 'Hot' }, { value: 'Cold', label: 'Cold' }, { value: 'Frozen', label: 'Frozen' }],
-    allergic_ingredients: [{ value: 'Nuts', label: 'Nuts' }, { value: 'Milk', label: 'Milk' }, { value: 'Soya', label: 'Soya' }, { value: 'None', label: 'None' }],
-    special_markings: [{ value: 'Veg', label: 'Veg' }, { value: 'NoVeg', label: 'NonVeg' }, { value: 'None', label: 'None' }],
+    serving_temp: [
+        { value: 'Hot', label: 'Hot' },
+        { value: 'Cold', label: 'Cold' },
+        { value: 'Frozen', label: 'Frozen' }
+    ],
+
+    allergic_ingredients: [
+        { value: 'Nuts', label: 'Nuts' },
+        { value: 'Milk', label: 'Milk' },
+        { value: 'Soya', label: 'Soya' },
+        { value: 'None', label: 'None' }
+    ],
+
+    special_markings: [
+        { value: 'Veg', label: 'Veg' },
+        { value: 'NoVeg', label: 'NonVeg' },
+        { value: 'None', label: 'None' }
+    ],
 
 
 

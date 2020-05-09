@@ -2,9 +2,9 @@ const express = require('express');
 var nodemailer = require('nodemailer');
 const router = express.Router();
 const { MasterSignupSchema } = require('../../MasterAdmin-Portal/Models/MSignup-model')
-//const { validateMeChecks } = require('./../middleware')
-const { validationResult } = require("express-validator/check");
-const { jwtSignin, jwtVerifyToken, validateMeChecks } = require('./../../middleware')
+
+const { validationResult } = require("express-validator");
+const { validateMeChecks } = require('./../../middleware/utills')
 const bcrypt = require('bcrypt')
 const rounds = 10
 
