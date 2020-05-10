@@ -9,7 +9,7 @@ let tokenList = {}
 
 module.exports = {
 
-    jwtSignin: function async(req, res, next, userId, admin) {
+    jwtSignin: async function (req, res, next, userId, admin) {
 
         const user = { id: userId }
         // do the database authentication here, with user name and password combination.
@@ -21,6 +21,7 @@ module.exports = {
         //set token in cache
 
         await client.setAsync(`tokenList_${userId}`, JSON.stringify(tokenList));
+        await client.setAsync(`subscription_Id${userId}`, JSON.stringify(tokenList));
 
         //console.log("jwtSignin===>>", tokenList)
         return res.status(200).send({ success: "success", token: token, refresh_token: refreshToken, admin: admin })
