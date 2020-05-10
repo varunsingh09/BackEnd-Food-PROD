@@ -418,8 +418,31 @@ router.post('/CustomerLogin', CustomerSignInValidations, async (req, res, next) 
 
         let customerId = customer._id
 
+        let subscription = await CustomerSubscriptionsSchema.findOne({
+                              email : req.body.email,
+                              status : true,
+                            });
+        let status = {};
+        if(subscription){
+          status['subscription_active'] = true;
+        }else{
+          status['subscription_active'] = false;
+        }
+
+        let paymentMethod = await CustomerCardStatusSchema.findOne({ email: req.body.email , status : true });
+
+        if(paymentMethod){
+          status['payment_method_status'] = true;
+        }else{
+          status['payment_method_status'] = false;
+        }
+
+        console.log(customer);
+
+
+
         try {
-            let token = jwtSignin(req, res, next, { adminId: customerId, admin: customer });
+            let token = jwtSignin(req, res, next, { adminId: customerId, admin: customer, status:status });
 
             // return res.status(200).json({});
         } catch (err) {
