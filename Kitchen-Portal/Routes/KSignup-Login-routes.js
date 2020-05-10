@@ -152,7 +152,7 @@ router.post('/KitchenSendEmail', async (req, res, next) => {
 
 router.post('/KitchenSignInLogout', async (req, res, next) => {
 
-    let accessToken = req.headers['Authorization']
+    let accessToken = req.headers['authorization']
     let refresh_token = accessToken && accessToken.split(' ')[1]
     let { userId } = req.body
 
@@ -163,7 +163,7 @@ router.post('/KitchenSignInLogout', async (req, res, next) => {
 
     Object.values(tokenList).filter(token => token !== refresh_token)
     await client.delAsync(`tokenList_${userId}`);
-    
+
     //console.log('deleted', userId)
     return res.status(201).send({ success: { "msg": 'Logout sucessfuly', logout: true } });
 
