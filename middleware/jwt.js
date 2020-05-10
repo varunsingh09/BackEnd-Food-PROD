@@ -21,6 +21,7 @@ module.exports = {
         //set token in cache
 
         await client.setAsync(`tokenList_${userId}`, JSON.stringify(tokenList));
+        await client.setAsync(`subscription_Id${userId}`, JSON.stringify(tokenList));
 
         //console.log("jwtSignin===>>", tokenList)
         return res.status(200).send({ success: "success", token: token, refresh_token: refreshToken, admin: admin })
