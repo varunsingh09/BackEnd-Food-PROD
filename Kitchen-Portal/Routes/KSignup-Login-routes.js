@@ -4,7 +4,7 @@ const { KitchenSignupSchema } = require('./../../Kitchen-Portal/Models/KSignup-m
 const { validationResult } = require("express-validator");
 const { validateMeChecks, CustomerSignInValidations } = require('./../../middleware/utills')
 const { sendEmail } = require('./../../middleware/email')
-const { jwtSignin, jwtVerifyToken ,tokenList} = require('./../../middleware/jwt')
+const { jwtSignin, jwtVerifyToken, tokenList } = require('./../../middleware/jwt')
 const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Error.model')
 const client = require('./../../middleware/redis')
 const bcrypt = require('bcrypt')
@@ -154,10 +154,17 @@ router.post('/KitchenSignInLogout', async (req, res, next) => {
 
     let accessToken = req.headers['Authorization']
     let refresh_token = accessToken && accessToken.split(' ')[1]
-    //console.log( req.headers)
-    await client.delAsync('tokenList');
-    //console.log('deleted')
-    Object.values(tokenList).filter(token => token!==refresh_token)
+    let { userId } = req.body
+
+    let tokenData = await client.getAsync(`tokenList_${userId}`);
+    let tokenList = tokenData === null ? {} : JSON.parse(tokenData)
+
+    //console.log(userId,"---", Object.values(tokenList))
+
+    Object.values(tokenList).filter(token => token !== refresh_token)
+    await client.delAsync(`tokenList_${userId}`);
+    
+    //console.log('deleted', userId)
     return res.status(201).send({ success: { "msg": 'Logout sucessfuly', logout: true } });
 
 });
@@ -193,10 +200,9 @@ router.post('/KitchenLogin', CustomerSignInValidations, async (req, res, next) =
 
     } else {
 
-        let adminId = admin._id
-
         try {
-            let token = jwtSignin(req, res, next, { adminId: adminId, admin: admin })
+            let adminId = admin._id
+            let token = jwtSignin(req, res, next, adminId, admin)
 
         } catch (err) {
             return next(err)
