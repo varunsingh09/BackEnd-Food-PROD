@@ -4,7 +4,7 @@ const { KitchenSignupSchema } = require('./../../Kitchen-Portal/Models/KSignup-m
 const { validationResult } = require("express-validator");
 const { validateMeChecks, CustomerSignInValidations } = require('./../../middleware/utills')
 const { sendEmail } = require('./../../middleware/email')
-const { jwtSignin, jwtVerifyToken, tokenList } = require('./../../middleware/jwt')
+const { jwtSignin, jwtVerifyToken} = require('./../../middleware/jwt')
 const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Error.model')
 const client = require('./../../middleware/redis')
 const bcrypt = require('bcrypt')
@@ -157,7 +157,7 @@ router.post('/KitchenSignInLogout', async (req, res, next) => {
     let { userId } = req.body
 
     let tokenData = await client.getAsync(`tokenList_${userId}`);
-    tokenList = tokenData === null ? {} : JSON.parse(tokenData)
+    let tokenList = tokenData === null ? {} : JSON.parse(tokenData)
 
     //console.log(userId,"---", Object.values(tokenList))
 
