@@ -9,7 +9,7 @@ let tokenList = {}
 
 module.exports = {
 
-    jwtSignin: function (req, res, next, { userId, admin }) {
+    jwtSignin: async function (req, res, next, userId, admin) {
 
         const user = { id: userId }
         // do the database authentication here, with user name and password combination.
@@ -19,7 +19,9 @@ module.exports = {
 
         tokenList[refreshToken] = refreshToken
         //set token in cache
-        client.setAsync('tokenList', JSON.stringify(tokenList));
+
+        await client.setAsync(`tokenList_${userId}`, JSON.stringify(tokenList));
+        await client.setAsync(`subscription_Id${userId}`, JSON.stringify(tokenList));
 
         //console.log("jwtSignin===>>", tokenList)
         return res.status(200).send({ success: "success", token: token, refresh_token: refreshToken, admin: admin })
@@ -28,10 +30,11 @@ module.exports = {
 
     jwtVerifyToken: async function (req, res, next) {
         let { authorization } = req.headers
+        let userId = req.body_user_id
         const refreshToken = authorization && authorization.split(' ')[1]
         //console.log("jwtVerifyToken", req.headers)
 
-        let tokenData = await client.getAsync('tokenList');
+        let tokenData = await client.getAsync(`tokenList_${userId}`);
 
 
         let tokenList = tokenData === null ? {} : JSON.parse(tokenData)
@@ -40,14 +43,13 @@ module.exports = {
         if (!refreshToken && refreshToken === undefined) return res.status(401).send({ errors: [{ "msg": 'No token provided.' }] });
 
         if (refreshToken in tokenList) {
-            let userId = req.body_user_id
             const user = { id: userId }
 
             const token = jwt.sign(user, config.ACCESS_TOKEN_SECRET, { expiresIn: config.ACCESS_TOKEN_LIFE })
 
             // update the token in the list
             tokenList[refreshToken] = token
-            await lient.setAsync('tokenList', JSON.stringify(tokenList));
+            await client.setAsync(`tokenList_${userId}`, JSON.stringify(tokenList));
 
             return res.status(200).send({ success: "success", refresh_token: token })
         } else {
@@ -82,7 +84,5 @@ module.exports = {
         }
 
     },
-
-    tokenList: tokenList,
 
 }
