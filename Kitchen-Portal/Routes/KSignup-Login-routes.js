@@ -157,7 +157,7 @@ router.post('/KitchenSignInLogout', async (req, res, next) => {
     let { userId } = req.body
 
     let tokenData = await client.getAsync(`tokenList_${userId}`);
-    let tokenList = tokenData === null ? {} : JSON.parse(tokenData)
+    tokenList = tokenData === null ? {} : JSON.parse(tokenData)
 
     //console.log(userId,"---", Object.values(tokenList))
 
@@ -202,7 +202,7 @@ router.post('/KitchenLogin', CustomerSignInValidations, async (req, res, next) =
 
         try {
             let adminId = admin._id
-            let token = jwtSignin(req, res, next, adminId, admin)
+            token = jwtSignin(req, res, next, adminId, admin)
 
         } catch (err) {
             return next(err)
