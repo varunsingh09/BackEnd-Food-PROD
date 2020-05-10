@@ -202,7 +202,7 @@ router.post('/KitchenLogin', CustomerSignInValidations, async (req, res, next) =
 
         try {
             let adminId = admin._id
-            token = jwtSignin(req, res, next, adminId, admin)
+            jwtSignin(req, res, next, adminId, admin)
 
         } catch (err) {
             return next(err)
