@@ -10,7 +10,6 @@ const session = require("express-session");
 // testing organization git
 
 require("./utills/db");
-require("./utills/events");
 
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
