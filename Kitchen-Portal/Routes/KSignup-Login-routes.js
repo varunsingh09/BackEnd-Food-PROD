@@ -4,12 +4,12 @@ const { KitchenSignupSchema } = require('./../../Kitchen-Portal/Models/KSignup-m
 const { validationResult } = require("express-validator");
 const { validateMeChecks, CustomerSignInValidations } = require('./../../middleware/utills')
 const { sendEmail } = require('./../../middleware/email')
-const { jwtSignin, jwtVerifyToken} = require('./../../middleware/jwt')
+const { jwtSignin, jwtVerifyToken } = require('./../../middleware/jwt')
 const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Error.model')
 const client = require('./../../middleware/redis')
 const bcrypt = require('bcrypt')
 const rounds = 10
-
+var nodemailer = require("nodemailer");
 
 
 
@@ -248,8 +248,6 @@ router.post('/token', async (req, res, next) => {
 
     jwtVerifyToken(req, res, next)
 });
-
-
 
 
 module.exports = router;
