@@ -29,6 +29,7 @@
     "express-session": "^1.17.1",
     "express-validator": "^6.5.0",
     "gm": "^1.23.1",
+    "helmet": "^3.22.0",
     "jimp": "^0.9.8",
     "jsonwebtoken": "^8.5.1",
     "mocha": "^7.1.1",
