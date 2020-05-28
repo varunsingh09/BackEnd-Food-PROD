@@ -51,6 +51,31 @@ module.exports = {
 
     ],
 
+    CustomerSignUpValidations: [
+        check('email', 'Email is required.').not().isEmpty().isEmail().withMessage('Please check email.'),
+        check('zipcode', 'Zipcode is not valid.').isLength({ min: 5, max: 5 }).not().isEmpty().withMessage('Zipcode Cant be Empty!!'),
+        check('firstName', 'First Name is required.').not().isEmpty().withMessage('First Name is required!!'),
+        check('lastName', 'Last Name is required.').not().isEmpty().withMessage('Last Name is required!!'),
+        check('password', 'Password is required.').not().isEmpty().withMessage('Password is required!!'),
+
+        //check('email').not().isEmpty().withMessage('Can not levave black').isEmail('Wrong email format'),
+        //isLength({ min: 3, max: 50 }).withMessage('Name length in between 3 to 50 chars'),
+        check('password').not().isEmpty().withMessage('Password Cant be Empty!!'),
+    ],
+
+    CustomerSubscriptionValidations: [
+      check('email', 'Email is required.').not().isEmpty().isEmail(),
+      check('stripe_customer_id', 'stripe_customer_id is required.').not().isEmpty(),
+      check('stripe_payment_method_id', 'stripe_payment_method_id is required.').not().isEmpty(),
+      check('stripe_plan_id', 'stripe_plan_id is required.').not().isEmpty(),
+      check('days', 'days is reequired.').not().isEmpty(),
+
+    ],
+
+    RecurringBillingValidations : [
+      check('email', 'Email is required.').not().isEmpty().isEmail(),
+    ],
+
 
 
 
@@ -82,5 +107,7 @@ module.exports = {
 
 
     serving_zipcodes: [60045, 60066, 60067, 6004, 8007, 45005, 45006, 45007, 45008, 45009],
+
+free_plates_discount_codes: [{code : '123' , 'plates':2 } , {code : '345' , 'plates':5 }]
 
 }

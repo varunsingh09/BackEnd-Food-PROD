@@ -66,6 +66,16 @@ const CustomerOrder = require("./Customer-Portal/Routes/CustomerOrder.Route");
 app.use("/orders", CustomerOrder);
 // post - /orders/CustomerOrder
 
+
+
+// Ikram Hnadling Customer signup flow
+const CustomerSignup = require ('./Customer-Portal/Routes/CustomerSignupLogin-Route')
+app.use('/Customer',CustomerSignup)
+//  Post - /Customer/CustomerSignup
+
+
+
+
 // Error Route API Route // This new structure
 const Errors = require("./Common-Model-Routes/Routes/Error.routes");
 app.use("/CaptureErr", Errors);
