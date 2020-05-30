@@ -53,6 +53,10 @@
     "install": "^0.13.0",
     "nodemon": "^1.19.4",
     "npm": "^6.14.4",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "uuid": "^3.4.0"
+  },
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
   }
 }
