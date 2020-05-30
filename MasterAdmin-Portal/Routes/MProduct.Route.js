@@ -25,7 +25,7 @@ const {CaptureErrorsSchema} = require('./../../Common-Model-Routes/Models/Error.
 
 
 router.post('/Addproduct', upload.single("image"),async (req, res, next) => {
-    
+
   console.log(req.body)
   const files = req.file;
 
@@ -67,10 +67,10 @@ router.post('/Addproduct', upload.single("image"),async (req, res, next) => {
           });
 
           await product.save();
-        
+
 
           if (product._id) {
-              
+
               Jimp.read(req.file.path, function (err, img) {
                   if (err) return res.status(200).json({ errors: [{ 'msg': err }] });
                   let sizeArr = [500, 400, 300]
@@ -90,32 +90,32 @@ router.post('/Addproduct', upload.single("image"),async (req, res, next) => {
                       filename: imageArr,
                       product_id: product._id,
                       kitchen_name: product.kitchen_name
-  
+
                   });
-  
+
                   Images.save();
                   return res.status(200).send({
                       product: product, "message": "Data save successfully with image.",
                       "images": imageArr
                   });
 
-              });               
+              });
           }
 
       } catch (error) {
 
           let str = `E11000 duplicate key error collection: test.masteradminsignups index`
 
-              // This below code will capture error and store it to ERROR Captured collection 
+              // This below code will capture error and store it to ERROR Captured collection
               errs = new CaptureErrorsSchema({
                 error: error,
                 errorRoute: 'Addproduct',
                 email: req.body.email,
 
                 kitchen_name: req.body.kitchen_name
-               
+
             });
-    
+
 
             await errs.save();
 
@@ -138,7 +138,7 @@ router.post('/Addproduct', upload.single("image"),async (req, res, next) => {
 
 
 // Route to fetch All product list Along with product images
-// we are fetching from two diffrent collections 
+// we are fetching from two diffrent collections
 
 router.get('/AllProducts', async function (req,res){
 
@@ -156,7 +156,7 @@ router.get('/AllProducts', async function (req,res){
     },
     {
         "$project": {
-  
+
             "item_type": "$$ROOT.item_type",
             "kitchen_name": "$$ROOT.kitchen_name",
             "item_name": "$$ROOT.item_name",
@@ -170,9 +170,9 @@ router.get('/AllProducts', async function (req,res){
     },
     { "$unwind": "$imageDetails" },
     //{ $match: { kitchen_name: req.body.kitchen_name } },
-  
+
   ]);
-  
+
   console.log(products)
   return res.status(200).send({ "results": products })
 
@@ -188,16 +188,16 @@ router.get('/AllProducts', async function (req,res){
 
 
 
-// Below Route is to fetch data which is stored in middleware.js file 
+// Below Route is to fetch data which is stored in middleware.js file
 // Get - /API/products/preSetData'
-// redis is set to use in cache 
+// redis is set to use in cache
 
 router.get('/preSetData', function (req, res) {
   console.log('hello', serving_temp)
-    
-  //await redisSetKey('PreSetData', list) // redis code 
 
-  return res.status(200).send({ 
+  //await redisSetKey('PreSetData', list) // redis code
+
+  return res.status(200).send({
     "item_type": item_type,
     "serving_temp":serving_temp,
     "allergic_ingredients":allergic_ingredients,
