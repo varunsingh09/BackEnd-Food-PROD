@@ -125,14 +125,12 @@ router.post('/CustomerSignup', CustomerSignUpValidations, async function (
     //sending email method or function
     let mailSentResp = await transporter.sendMail(mailOptions);
 
-    return res
-      .status(200)
-      .send({
-        response: admin,
-        route: 'https://yahoo.com',
-        msg: 'Successfully Created ',
-        cust_id: CreateStripeCustomer.id,
-      });
+    return res.status(200).send({
+      response: admin,
+      route: 'https://yahoo.com',
+      msg: 'Successfully Created ',
+      cust_id: CreateStripeCustomer.id,
+    });
   } catch (error) {
     let str = `E11000 duplicate key error collection: FirstFoodApp.customersignups index`;
     console.log(error);
@@ -362,13 +360,11 @@ router.post(
         await delivery_address.save();
       }
 
-      return res
-        .status(200)
-        .send({
-          response: admin,
-          msg: 'Successfully Created ',
-          stripe_subscription_id: stripe_subscription.id,
-        });
+      return res.status(200).send({
+        response: admin,
+        msg: 'Successfully Created ',
+        stripe_subscription_id: stripe_subscription.id,
+      });
     } catch (error) {
       let str = `E11000 duplicate key error collection: FirstFoodApp.customersignups index`;
       console.log(error);
@@ -415,31 +411,27 @@ router.post(
       email: req.body.email,
     });
     if (customer == null) {
-      return res
-        .status(200)
-        .json({
-          errors: [
-            {
-              msg:
-                'Customer does not exisits! Or deactivated, Please contact Administrator.',
-            },
-          ],
-        });
+      return res.status(200).json({
+        errors: [
+          {
+            msg:
+              'Customer does not exisits! Or deactivated, Please contact Administrator.',
+          },
+        ],
+      });
     }
 
     let compPassword = bcrypt.compareSync(req.body.password, customer.password);
 
     if (compPassword == false) {
-      return res
-        .status(200)
-        .json({
-          errors: [
-            {
-              msg:
-                'Incorrect Password!! Or  Account deactivated, Please check login details.',
-            },
-          ],
-        });
+      return res.status(200).json({
+        errors: [
+          {
+            msg:
+              'Incorrect Password!! Or  Account deactivated, Please check login details.',
+          },
+        ],
+      });
     } else {
       let customerId = customer._id;
 
@@ -520,14 +512,12 @@ router.post(
       console.log(subscription);
       if (subscription) {
         if (activePlanOrdersCount < subscription.total_plates_tobe_serverd) {
-          return res
-            .status(200)
-            .json({
-              activePlan: activePlan,
-              msg: `Active plan has ${
-                subscription.total_plates_tobe_serverd - activePlanOrdersCount
-              } plates left.`,
-            });
+          return res.status(200).json({
+            activePlan: activePlan,
+            msg: `Active plan has ${
+              subscription.total_plates_tobe_serverd - activePlanOrdersCount
+            } plates left.`,
+          });
         }
       }
 
@@ -608,20 +598,16 @@ router.post(
 
       await new_subscription.save();
 
-      (query = { email: body.email }),
-        (update = {
-          stripe_subscription_id: stripe_subscription.id,
-        }),
-        (options = { upsert: false, new: false, setDefaultsOnInsert: true });
+      let query = { email: body.email };
+      let update = { stripe_subscription_id: stripe_subscription.id };
+      let options = { upsert: false, new: false, setDefaultsOnInsert: true };
 
       await CustomerPlanSchema.findOneAndUpdate(query, update, options);
 
-      return res
-        .status(200)
-        .json({
-          subscription: new_subscription,
-          msg: `Successfully Subscribed.`,
-        });
+      return res.status(200).json({
+        subscription: new_subscription,
+        msg: `Successfully Subscribed.`,
+      });
     } catch (error) {
       let str = `E11000 duplicate key error collection: FirstFoodApp.customersignups index`;
       console.log(error);
