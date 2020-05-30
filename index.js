@@ -1,21 +1,28 @@
 const express = require("express");
 const app = express();
-var morgan = require("morgan");
-var cors = require("cors");
+const morgan = require("morgan");
+const cors = require("cors");
 const PORT = process.env.PORT || 3001;
-var bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 const session = require("express-session");
+const helmet = require('helmet')
 
 // add comment from github
 // testing organization git
 
 require("./utills/db");
 
+//Helmet header security
+app.use(helmet.xssFilter())
+app.use(helmet.frameguard())
+// End here
+
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(session({ secret: "ssshhhhh", saveUninitialized: true, resave: true }));
 app.use(cors()); // cros is for cross orgin resouce for issue with front end backend ports
+
 
 // Master Admin Signup API Route // This is new structure
 const MSignUp = require("./MasterAdmin-Portal/Routes/MSignup-route");
@@ -58,6 +65,16 @@ app.use("/products", Addproduct);
 const CustomerOrder = require("./Customer-Portal/Routes/CustomerOrder.Route");
 app.use("/orders", CustomerOrder);
 // post - /orders/CustomerOrder
+
+
+
+// Ikram Hnadling Customer signup flow
+const CustomerSignup = require ('./Customer-Portal/Routes/CustomerSignupLogin-Route')
+app.use('/Customer',CustomerSignup)
+//  Post - /Customer/CustomerSignup
+
+
+
 
 // Error Route API Route // This new structure
 const Errors = require("./Common-Model-Routes/Routes/Error.routes");
