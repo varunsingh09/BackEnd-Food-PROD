@@ -60,7 +60,7 @@ app.use("/products", Addproduct);
 // Get  - /products/preSetData
 // Get  -/products/Allproducts
 
-// VARUN VARUN HANDLING ORDER API
+// VARUN HANDLING ORDER API
 // ADD Customer Order  - API Route // This is API with QR CODE - varun handling
 const CustomerOrder = require("./Customer-Portal/Routes/CustomerOrder.Route");
 app.use("/orders", CustomerOrder);

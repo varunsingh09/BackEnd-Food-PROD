@@ -516,16 +516,16 @@ router.post(
             activePlan: activePlan,
             msg: `Active plan has ${
               subscription.total_plates_tobe_serverd - activePlanOrdersCount
-            } plates left.`,
+              } plates left.`,
           });
         }
       }
 
       //make subscription inactive
       let query = {
-          email: body.email,
-          stripe_subscription_id: activePlan[0].stripe_subscription_id,
-        },
+        email: body.email,
+        stripe_subscription_id: activePlan[0].stripe_subscription_id,
+      },
         update = {
           status: false,
         },
@@ -554,9 +554,9 @@ router.post(
       if (stripe_subscription.status != 'active') {
         //make plan inactive
         let query = {
-            email: body.email,
-            stripe_plan_id: activePlan[0].stripe_plan_id,
-          },
+          email: body.email,
+          stripe_plan_id: activePlan[0].stripe_plan_id,
+        },
           update = {
             status: false,
             status_reason: 'card declined.',
@@ -598,11 +598,11 @@ router.post(
 
       await new_subscription.save();
 
-      let query = { email: body.email };
-      let update = { stripe_subscription_id: stripe_subscription.id };
-      let options = { upsert: false, new: false, setDefaultsOnInsert: true };
+      let query_subscription = { email: body.email };
+      let update_subscription = { stripe_subscription_id: stripe_subscription.id };
+      let options_subscription = { upsert: false, new: false, setDefaultsOnInsert: true };
 
-      await CustomerPlanSchema.findOneAndUpdate(query, update, options);
+      await CustomerPlanSchema.findOneAndUpdate(query_subscription, update_subscription, options_subscription);
 
       return res.status(200).json({
         subscription: new_subscription,
