@@ -553,17 +553,17 @@ router.post(
 
       if (stripe_subscription.status != 'active') {
         //make plan inactive
-        let query = {
+        let query_3 = {
             email: body.email,
             stripe_plan_id: activePlan[0].stripe_plan_id,
           },
-          update = {
+          update_3 = {
             status: false,
             status_reason: 'card declined.',
           },
-          options = { upsert: false, new: false, setDefaultsOnInsert: true };
+          options_3 = { upsert: false, new: false, setDefaultsOnInsert: true };
 
-        await CustomerPlanSchema.findOneAndUpdate(query, update, options);
+        await CustomerPlanSchema.findOneAndUpdate(query_3, update_3, options_3);
 
         return res.status(422).json({ meessage: 'Subscription failed.' });
       }
