@@ -598,11 +598,11 @@ router.post(
 
       await new_subscription.save();
 
-      let query = { email: body.email };
-      let update = { stripe_subscription_id: stripe_subscription.id };
-      let options = { upsert: false, new: false, setDefaultsOnInsert: true };
+      let query_sub = { email: body.email };
+      let update_sub = { stripe_subscription_id: stripe_subscription.id };
+      let options_sub = { upsert: false, new: false, setDefaultsOnInsert: true };
 
-      await CustomerPlanSchema.findOneAndUpdate(query, update, options);
+      await CustomerPlanSchema.findOneAndUpdate(query_sub, update_sub, options_sub);
 
       return res.status(200).json({
         subscription: new_subscription,
