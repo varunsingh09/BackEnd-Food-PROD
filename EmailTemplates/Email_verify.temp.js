@@ -1,0 +1,1 @@
+//we will add email verify template in this file

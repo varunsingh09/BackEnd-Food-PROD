@@ -81,7 +81,7 @@ router.post('/CustomerSignup', CustomerSignUpValidations, async function (
     let stripeCustomer = await stripe.customers.list({ email: req.body.email });
 
     if (stripeCustomer.data.length > 0) {
-      let del = await stripe.customers.del(stripeCustomer.data[0].id);
+      await stripe.customers.del(stripeCustomer.data[0].id);
     }
 
     let CreateStripeCustomer = await stripe.customers.create({
@@ -123,7 +123,7 @@ router.post('/CustomerSignup', CustomerSignUpValidations, async function (
     };
 
     //sending email method or function
-    let mailSentResp = await transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions);
 
     return res.status(200).send({
       response: admin,
@@ -174,7 +174,7 @@ router.post(
     try {
       let body = req.body;
 
-      let errors = { errors: [] };
+      let error_1 = { errors: [] };
       let errorExist = false;
 
       // Check if this user already exisits
@@ -185,7 +185,7 @@ router.post(
 
       if (customer == null) {
         errorExist = true;
-        errors.errors.push({
+        error_1.errors.push({
           msg: 'Email and stripe customer id does not match.',
         });
         //return res.status(200).json({ errors: [{ "msg": 'Email and stripe customer id does not match.' }] });
@@ -230,14 +230,14 @@ router.post(
       // console.log('attach',attach);
       // //save card status to mongo
       if (attach) {
-        let query = { email: req.body.email },
-          update = {
+        let query_1 = { email: req.body.email },
+          update_1 = {
             customer_stripe_id: body.stripe_customer_id,
             stripe_payment_method_id: body.stripe_payment_method_id,
           },
-          options = { upsert: true, new: true, setDefaultsOnInsert: true };
+          options_1 = { upsert: true, new: true, setDefaultsOnInsert: true };
 
-        await CustomerCardStatusSchema.findOneAndUpdate(query, update, options);
+        await CustomerCardStatusSchema.findOneAndUpdate(query_1, update_1, options_1);
       }
 
       //create stripe subscription
@@ -335,20 +335,20 @@ router.post(
 
       //save billing address to mongo
       if (body.billing_address) {
-        let query = { email: body.email },
-          update = { billing_address: body.billing_address },
-          options = { upsert: true, new: true, setDefaultsOnInsert: true };
+        let query_2 = { email: body.email },
+          update_2 = { billing_address: body.billing_address },
+          options_2 = { upsert: true, new: true, setDefaultsOnInsert: true };
 
         await CustomerBillingAddressSchema.findOneAndUpdate(
-          query,
-          update,
-          options
+          query_2,
+          update_2,
+          options_2
         );
       }
 
       //save delivery address to mongo
       if (body.delivery_address) {
-        let delivery_address = new CustomerDeliveryAddressSchema({
+        let delivery_address_1 = new CustomerDeliveryAddressSchema({
           email: body.email,
           delivery_address: body.delivery_address,
           city: body.city ? body.city : '',
@@ -357,7 +357,7 @@ router.post(
           address_type: body.address_type ? body.address_type : '',
         });
 
-        await delivery_address.save();
+        await delivery_address_1.save();
       }
 
       return res.status(200).send({
@@ -460,7 +460,7 @@ router.post(
       console.log(customer);
 
       try {
-        let token = jwtSignin(req, res, next, {
+         jwtSignin(req, res, next, {
           adminId: customerId,
           admin: customer,
           status: status,
@@ -553,17 +553,17 @@ router.post(
 
       if (stripe_subscription.status != 'active') {
         //make plan inactive
-        let query = {
+        let query_3 = {
             email: body.email,
             stripe_plan_id: activePlan[0].stripe_plan_id,
           },
-          update = {
+          update_3 = {
             status: false,
             status_reason: 'card declined.',
           },
-          options = { upsert: false, new: false, setDefaultsOnInsert: true };
+          options_3 = { upsert: false, new: false, setDefaultsOnInsert: true };
 
-        await CustomerPlanSchema.findOneAndUpdate(query, update, options);
+        await CustomerPlanSchema.findOneAndUpdate(query_3, update_3, options_3);
 
         return res.status(422).json({ meessage: 'Subscription failed.' });
       }
@@ -598,11 +598,11 @@ router.post(
 
       await new_subscription.save();
 
-      let query = { email: body.email };
-      let update = { stripe_subscription_id: stripe_subscription.id };
-      let options = { upsert: false, new: false, setDefaultsOnInsert: true };
+      let query_sub = { email: body.email };
+      let update_sub = { stripe_subscription_id: stripe_subscription.id };
+      let options_sub = { upsert: false, new: false, setDefaultsOnInsert: true };
 
-      await CustomerPlanSchema.findOneAndUpdate(query, update, options);
+      await CustomerPlanSchema.findOneAndUpdate(query_sub, update_sub, options_sub);
 
       return res.status(200).json({
         subscription: new_subscription,
