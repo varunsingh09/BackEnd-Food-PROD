@@ -592,7 +592,7 @@ router.post(
         free_plates: free_plates_discount.plates,
         freePlateCoupon_no: free_plates_discount.code,
         total_plates_tobe_serverd:
-          activePlan[0].plates + free_plates_discount.plates,
+         activePlan[0].plates + free_plates_discount.plates,
         // stripe_dicount_code : ,
         // discount_type : ,
         total_charged: stripe_subscription.plan.amount / 100,
@@ -600,19 +600,12 @@ router.post(
 
       await new_subscription.save();
 
-<<<<<<< HEAD
-      let query_subscription = { email: body.email };
-      let update_subscription = { stripe_subscription_id: stripe_subscription.id };
-      let options_subscription = { upsert: false, new: false, setDefaultsOnInsert: true };
 
-      await CustomerPlanSchema.findOneAndUpdate(query_subscription, update_subscription, options_subscription);
-=======
       let query_sub = { email: body.email };
       let update_sub = { stripe_subscription_id: stripe_subscription.id };
       let options_sub = { upsert: false, new: false, setDefaultsOnInsert: true };
 
       await CustomerPlanSchema.findOneAndUpdate(query_sub, update_sub, options_sub);
->>>>>>> ff003af004309029cf04e997d8c0af81023ce96a
 
       return res.status(200).json({
         subscription: new_subscription,
