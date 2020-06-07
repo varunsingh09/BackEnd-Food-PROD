@@ -8,9 +8,10 @@ const {
 const { defaultTemplate } = require('./../EmailTemplates/Email_verify.temp');
 
 module.exports = {
-  sendEmail: function (req, res, next, { admin: admin, template = 'default' }) {
+  sendEmail: function (req, res, next,  params,template = 'default') {
+    
     //sending email from
-
+    console.log(template,"----",params)
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -20,7 +21,18 @@ module.exports = {
     });
 
     // sending mail to
-    var mailOptions = defaultTemplate(req, res, next, admin);
+
+    switch (template) {
+      case 'signup':
+        var mailOptions = signupTemplate(req, res, next, params);
+
+      case 'login':
+        var mailOptions = loginTemplate(req, res, next, params);
+
+      default:
+        var mailOptions = defaultTemplate(req, res, next, params);
+    }
+
     console.log({ mailOptions, template })
     //sending email method or function
     transporter.sendMail(mailOptions, function (error, info) {
