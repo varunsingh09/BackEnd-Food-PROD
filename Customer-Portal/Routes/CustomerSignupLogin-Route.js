@@ -42,8 +42,8 @@ const {
   CustomerSubscriptionValidations,
   free_plates_discount_codes,
   RecurringBillingValidations,
-} = require('../../middleware/utills');
-//const {  validateMeChecks, serving_zipcodes, CustomerSignInValidations, CustomerSignUpValidations, CustomerSubscriptionValidations, free_plates_discount_codes, RecurringBillingValidations } = require('../../middleware/utills');
+} = require('../../middleware/utils');
+//const {  validateMeChecks, serving_zipcodes, CustomerSignInValidations, CustomerSignUpValidations, CustomerSubscriptionValidations, free_plates_discount_codes, RecurringBillingValidations } = require('../../middleware/utils');
 const bcrypt = require('bcrypt');
 const rounds = 10;
 const stripe = require('stripe')(process.env.StripeSecretKey);

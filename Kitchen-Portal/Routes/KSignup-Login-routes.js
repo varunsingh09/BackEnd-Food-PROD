@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { KitchenSignupSchema } = require('./../../Kitchen-Portal/Models/KSignup-model')
 const { validationResult } = require("express-validator");
-const { validateMeChecks, CustomerSignInValidations } = require('./../../middleware/utills')
+const { validateMeChecks, CustomerSignInValidations } = require('./../../middleware/utils')
 const { sendEmail } = require('./../../middleware/email')
 const { jwtSignin, jwtVerifyToken } = require('./../../middleware/jwt')
 const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Error.model')
@@ -140,7 +140,7 @@ router.post('/KitchenSendEmail', async (req, res, next) => {
 
     }
     //console.log('come')
-    sendEmail(req, res, next, admin,template='default')
+    sendEmail(req, res, next, admin, template = 'default')
 
 });
 

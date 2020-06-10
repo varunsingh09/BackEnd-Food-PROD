@@ -10,7 +10,7 @@ const helmet = require('helmet')
 // add comment from github
 // testing organization git
 
-require("./utills/db");
+require("./utils/db");
 
 //Helmet header security
 app.use(helmet.xssFilter())
@@ -20,8 +20,14 @@ app.use(helmet.frameguard())
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(session({ secret: "ssshhhhh", saveUninitialized: true, resave: true }));
-app.use(cors()); // cros is for cross orgin resouce for issue with front end backend ports
+app.use(cookieSession({
+  name: 'session',
+  keys: [
+    process.env.COOKIE_KEY1,
+    process.env.COOKIE_KEY2
+  ]
+}))
+app.use(cors()); // cors is for cross origin resources for issue with front end backend ports
 
 
 // Master Admin Signup API Route // This is new structure
@@ -69,8 +75,8 @@ app.use("/orders", CustomerOrder);
 
 
 // Ikram Hnadling Customer signup flow
-const CustomerSignup = require ('./Customer-Portal/Routes/CustomerSignupLogin-Route')
-app.use('/Customer',CustomerSignup)
+const CustomerSignup = require('./Customer-Portal/Routes/CustomerSignupLogin-Route')
+app.use('/Customer', CustomerSignup)
 //  Post - /Customer/CustomerSignup
 
 

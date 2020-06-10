@@ -1,7 +1,7 @@
 var events = require('events');
 var fs = require('fs');
 var path = require('path');
-var fileName = path.resolve('./utills/JournalDEV.txt');
+var fileName = path.resolve('./utils/JournalDEV.txt');
 
 var eventsEmitter = new events.EventEmitter();
 
