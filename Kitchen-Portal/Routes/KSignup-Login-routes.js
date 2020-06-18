@@ -20,7 +20,7 @@ var nodemailer = require("nodemailer");
 router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) {
 
     const errors = validationResult(req);
-
+    //console.log(req.body)
 
     if (!errors.isEmpty()) {
         return res.status(401).json({ errors: errors.array({ onlyFirstError: true }) });

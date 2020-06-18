@@ -5,6 +5,7 @@ const cors = require("cors");
 const PORT = process.env.PORT || 3001;
 const bodyParser = require("body-parser");
 const session = require("express-session");
+var cookieSession = require('cookie-session')
 const helmet = require('helmet')
 
 // add comment from github

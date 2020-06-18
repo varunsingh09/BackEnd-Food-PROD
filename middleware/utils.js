@@ -25,11 +25,11 @@ module.exports = {
 
     // Validation middleware check method for validation
     validateMeChecks: [
-        check('email', 'Email Cannot be empty.').not().isEmpty().isEmail().withMessage('Email is not valid'),
+        check('email', 'Email Cannot be empty!').not().isEmpty().isEmail().withMessage('Email is not valid!'),
         //check('email').not().isEmpty().withMessage('Can not levave black').isEmail('Wrong email format'),
         //isLength({ min: 3, max: 50 }).withMessage('Name length in between 3 to 50 chars'),
-        check('password').not().isEmpty().withMessage('Password Cant be Empty!').isLength({ min: 3, max: 5 }).withMessage('Password length in between 3 to 5 chars'),
-        check('zipcode').not().isEmpty().withMessage('Zipcode cant be Empty!').isLength({ min: 3, max: 6 }).withMessage('Zipcode length in between 3 to 6 chars'),
+        check('password').not().isEmpty().withMessage('Password Cant be Empty!').isLength({ min: 3, max: 5 }).withMessage('Password length in between 3 to 5 chars!'),
+        check('zipcode').not().isEmpty().withMessage('Zipcode cant be Empty!').isLength({ min: 3, max: 6 }).withMessage('Zipcode length in between 3 to 6 chars!'),
 
     ],
 

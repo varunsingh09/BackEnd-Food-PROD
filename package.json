@@ -21,6 +21,7 @@
     "change-case-keys": "0.0.4",
     "change-case-object": "^2.0.0",
     "cookie-parser": "^1.4.3",
+    "cookie-session": "^1.4.0",
     "core-util-is": "^1.0.2",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -29,7 +30,7 @@
     "express-session": "^1.17.1",
     "express-validator": "^6.5.0",
     "gm": "^1.23.1",
-    "helmet": "^3.22.0",
+    "helmet": "^3.23.1",
     "jimp": "^0.9.8",
     "jsonwebtoken": "^8.5.1",
     "mocha": "^7.1.1",
@@ -56,6 +57,5 @@
     "npm": "^6.14.4",
     "request": "^2.88.2",
     "uuid": "^3.4.0"
-
   }
 }
