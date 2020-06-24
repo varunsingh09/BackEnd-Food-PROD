@@ -173,7 +173,7 @@ router.get('/AllProducts', async function (req,res){
 
   ]);
 
-  console.log(products)
+  //console.log(products)
   return res.status(200).send({ "results": products })
 
   } catch (error) {
