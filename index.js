@@ -5,7 +5,16 @@ const cors = require("cors");
 const PORT = process.env.PORT || 3001;
 const bodyParser = require("body-parser");
 const session = require("express-session");
-const helmet = require('helmet')
+const helmet = require('helmet');
+const compression = require('compression');
+const fs = require('fs');
+
+// capturing log in access file with morgan
+const acessLogStream = fs. createWriteStream (
+  path.join(__dirname,'access.log'),
+  { flags:'a'}
+);
+
 
 // add comment from github
 // testing organization git
@@ -17,7 +26,14 @@ app.use(helmet.xssFilter())
 app.use(helmet.frameguard())
 // End here
 
-app.use(morgan("dev"));
+// asset compresssion for zipping files 
+app.use(compression())
+//End here
+
+
+
+
+app.use(morgan("dev",{ stream: acessLogStream } ));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(session({ secret: "ssshhhhh", saveUninitialized: true, resave: true }));
