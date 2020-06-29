@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const helmet = require('helmet');
 const compression = require('compression');
+var path = require('path');
 const fs = require('fs');
 
 // capturing log in access file with morgan
@@ -19,7 +20,7 @@ const acessLogStream = fs. createWriteStream (
 // add comment from github
 // testing organization git
 
-require("./utills/db");
+require("./utils/db");
 
 //Helmet header security
 app.use(helmet.xssFilter())

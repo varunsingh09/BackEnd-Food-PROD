@@ -20,6 +20,7 @@
     "change-case": "^3.0.2",
     "change-case-keys": "0.0.4",
     "change-case-object": "^2.0.0",
+    "compression": "^1.7.4",
     "cookie-parser": "^1.4.3",
     "core-util-is": "^1.0.2",
     "cors": "^2.8.5",
