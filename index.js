@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 3001;
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const helmet = require('helmet')
+const compression = require('compression')
 
 // add comment from github
 // testing organization git
@@ -16,6 +17,10 @@ require("./utills/db");
 app.use(helmet.xssFilter())
 app.use(helmet.frameguard())
 // End here
+
+// asset compresssion for zipping files 
+app.use(compression())
+//End here
 
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
