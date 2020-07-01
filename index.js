@@ -21,19 +21,19 @@ const acessLogStream = fs. createWriteStream (
 // testing organization git
 
 require("./utils/db");
-
+app.use(cors()); // cors is for cross origin resources for issue with front end backend ports
+app.use(morgan("dev",{ stream: acessLogStream } ));
+app.use(bodyParser.json());
 //Helmet header security
 app.use(helmet.xssFilter())
 app.use(helmet.frameguard())
 // End here
-app.use(morgan("dev",{ stream: acessLogStream } ));
-app.use(bodyParser.urlencoded({ extended: true }));
 
 // asset compresssion for zipping files 
 app.use(compression())
 //End here
 
-//app.use(bodyParser.json());
+
 app.use(cookieSession({
   name: 'session',
   keys: [
@@ -41,8 +41,6 @@ app.use(cookieSession({
     process.env.COOKIE_KEY2
   ]
 }))
-app.use(cors()); // cors is for cross origin resources for issue with front end backend ports
-
 
 // Master Admin Signup API Route // This is new structure
 const MSignUp = require("./MasterAdmin-Portal/Routes/MSignup-route");
