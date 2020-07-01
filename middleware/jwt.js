@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-var config = require('./../utills/config');
+var config = require('./../utils/config');
 const client = require('./redis')
 
 

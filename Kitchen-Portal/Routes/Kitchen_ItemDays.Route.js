@@ -147,7 +147,7 @@ router.post('/ItemServingDays', async (req, res, next) => {
 
 //portal display kitchen name with item
 router.get('/ItemServingDaysMatserAdmin', async (req, res, next) => {
-  //console.log("---", typeof req.body.serving_days)
+  console.log("---", typeof req.body.serving_days)
 
   try {
 
@@ -162,6 +162,7 @@ router.get('/ItemServingDaysMatserAdmin', async (req, res, next) => {
 
     let KitchenItemServing = await KitchenItemServingDays.find(match);
     if (KitchenItemServing.length > 0) {
+      console.log("KitchenItemServing data ",KitchenItemServing)
       return res.status(200).json({ success: [{ 'data': KitchenItemServing, "total_kitchen": KitchenItemServing.length }] });
     } else {
       return res.status(200).json({ errors: [{ 'msg': `No kitechne found with provided kitchen ${req.body.kitchen_name}`, "total_kitchen": KitchenItemServing.length }] });
