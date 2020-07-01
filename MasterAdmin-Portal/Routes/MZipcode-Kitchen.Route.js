@@ -108,7 +108,7 @@ router.post('/ZipcodeKitchensList', async (req, res, next) => {
 
     let state = req.body.state
 
-    //console.log("body request ",req.body)
+    console.log("body request ",req.body)
 
     const match = {}
     if (req.body.state !== undefined) {

@@ -22,18 +22,19 @@ const acessLogStream = fs. createWriteStream (
 
 require("./utils/db");
 
+app.use(cors()); // cors is for cross origin resources for issue with front end backend ports
 //Helmet header security
 app.use(helmet.xssFilter())
 app.use(helmet.frameguard())
 // End here
 app.use(morgan("dev",{ stream: acessLogStream } ));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // asset compresssion for zipping files 
 app.use(compression())
 //End here
 
-//app.use(bodyParser.json());
+
 app.use(cookieSession({
   name: 'session',
   keys: [
@@ -41,7 +42,7 @@ app.use(cookieSession({
     process.env.COOKIE_KEY2
   ]
 }))
-app.use(cors()); // cors is for cross origin resources for issue with front end backend ports
+
 
 
 // Master Admin Signup API Route // This is new structure
