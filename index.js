@@ -5,14 +5,25 @@ const cors = require("cors");
 const PORT = process.env.PORT || 3001;
 const bodyParser = require("body-parser");
 const session = require("express-session");
-const helmet = require('helmet')
-const compression = require('compression')
+const cookieSession = require('cookie-session')
+const helmet = require('helmet');
+const compression = require('compression');
+var path = require('path');
+const fs = require('fs');
+
+// capturing log in access file with morgan
+const acessLogStream = fs. createWriteStream (
+  path.join(__dirname,'access.log'),
+  { flags:'a'}
+);
 
 // add comment from github
 // testing organization git
 
-require("./utills/db");
-
+require("./utils/db");
+app.use(cors()); // cors is for cross origin resources for issue with front end backend ports
+app.use(morgan("dev",{ stream: acessLogStream } ));
+app.use(bodyParser.json());
 //Helmet header security
 app.use(helmet.xssFilter())
 app.use(helmet.frameguard())
@@ -22,12 +33,14 @@ app.use(helmet.frameguard())
 app.use(compression())
 //End here
 
-app.use(morgan("dev"));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(session({ secret: "ssshhhhh", saveUninitialized: true, resave: true }));
-app.use(cors()); // cros is for cross orgin resouce for issue with front end backend ports
 
+app.use(cookieSession({
+  name: 'session',
+  keys: [
+    process.env.COOKIE_KEY1,
+    process.env.COOKIE_KEY2
+  ]
+}))
 
 // Master Admin Signup API Route // This is new structure
 const MSignUp = require("./MasterAdmin-Portal/Routes/MSignup-route");
@@ -65,7 +78,7 @@ app.use("/products", Addproduct);
 // Get  - /products/preSetData
 // Get  -/products/Allproducts
 
-// VARUN VARUN HANDLING ORDER API
+// VARUN HANDLING ORDER API
 // ADD Customer Order  - API Route // This is API with QR CODE - varun handling
 const CustomerOrder = require("./Customer-Portal/Routes/CustomerOrder.Route");
 app.use("/orders", CustomerOrder);
@@ -74,8 +87,8 @@ app.use("/orders", CustomerOrder);
 
 
 // Ikram Hnadling Customer signup flow
-const CustomerSignup = require ('./Customer-Portal/Routes/CustomerSignupLogin-Route')
-app.use('/Customer',CustomerSignup)
+const CustomerSignup = require('./Customer-Portal/Routes/CustomerSignupLogin-Route')
+app.use('/Customer', CustomerSignup)
 //  Post - /Customer/CustomerSignup
 
 

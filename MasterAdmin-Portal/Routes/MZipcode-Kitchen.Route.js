@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { ZipcodeKitchensSchema } = require('./../../MasterAdmin-Portal/Models/MZipcode-Kitchen.model')
 const { ProductSchema } = require('./../../MasterAdmin-Portal/Models/MProduct.model');
-const { serving_zipcodes, } = require('./../../middleware/utills')
+const { serving_zipcodes, } = require('./../../middleware/utils')
 const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Error.model')
 
 // Post 
@@ -100,12 +100,26 @@ router.post('/ZipcodeKitchens', async (req, res, next) => {
 
 
 
+
 router.get('/ZipcodeKitchens', async (req, res, next) => {
 
-    
-    let kitchen_names = typeof req.body.kitchen_names === "object" ? req.body.kitchen_names.map(String) : req.body.kitchen_names
 
-    //console.log("---------------", kitchen_names)
+    let kitchen_names = typeof req.params.kitchen_names === "object" ? req.params.kitchen_names.map(String) : req.params.kitchen_names
+
+    let state = req.params.state
+
+    //console.log("body request ",req.body)
+
+    const match = {}
+    if (req.params.state !== undefined) {
+        match.state = req.params.state
+    }
+    if (req.body.zipcode !== undefined) {
+        match.zipcodes = { "$in": req.params.zipcode }
+    }
+
+    console.log("=========>", match)
+    
     let product = await ProductSchema.count({ kitchen_name: kitchen_names });
 
     if (product === 0) {
@@ -113,10 +127,10 @@ router.get('/ZipcodeKitchens', async (req, res, next) => {
 
     }
 
-    let zipcodesData = await ZipcodeKitchensSchema.find({});
+    let zipcodesData = await ZipcodeKitchensSchema.find(match);
 
 
-    return res.status(200).json({ errors: [{ 'msg': 'Zipcode with kitchen' ,'zipcode_data':zipcodesData }] });
+    return res.status(200).json({ success: [{ 'msg': 'Zipcode with kitchen', 'zipcode_data': zipcodesData }] });
 
 
 

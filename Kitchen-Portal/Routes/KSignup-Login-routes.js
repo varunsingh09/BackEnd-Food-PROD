@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { KitchenSignupSchema } = require('./../../Kitchen-Portal/Models/KSignup-model')
 const { validationResult } = require("express-validator");
-const { validateMeChecks, CustomerSignInValidations } = require('./../../middleware/utills')
+const { validateMeChecks, CustomerSignInValidations } = require('./../../middleware/utils')
 const { sendEmail } = require('./../../middleware/email')
 const { jwtSignin, jwtVerifyToken } = require('./../../middleware/jwt')
 const { CaptureErrorsSchema } = require('./../../Common-Model-Routes/Models/Error.model')
@@ -20,7 +20,7 @@ var nodemailer = require("nodemailer");
 router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) {
 
     const errors = validationResult(req);
-
+    //console.log(req.body)
 
     if (!errors.isEmpty()) {
         return res.status(401).json({ errors: errors.array({ onlyFirstError: true }) });
@@ -83,7 +83,7 @@ router.post('/KitchenSignup', validateMeChecks, async function (req, res, next) 
 
             await admin.save();
 
-            sendEmail(req, res, next, { admin: admin })
+            sendEmail(req, res, next, admin)
 
             return res.status(200).send({ success: admin, 'route': 'https://yahoo.com', 'Msg': 'Successfully Created Master User' });
 
@@ -133,15 +133,14 @@ router.post('/KitchenSendEmail', async (req, res, next) => {
 
     //console.log(req.body._id)
     // Check if this user already exisits
-    let admin = await KitchenSignupSchema.findOne({ _id: req.body._id, status: false });
+    let admin = await KitchenSignupSchema.findOne({ _id: req.body._id, status: true });
     if (admin == null) {
 
         return res.status(401).json({ errors: [{ "msg": 'That admin dose not exisits! Or deactivated, Please resend email' }] });
 
     }
     //console.log('come')
-
-    sendEmail(req, res, next, { admin: admin })
+    sendEmail(req, res, next, admin, template = 'default')
 
 });
 

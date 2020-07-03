@@ -42,8 +42,8 @@ const {
   CustomerSubscriptionValidations,
   free_plates_discount_codes,
   RecurringBillingValidations,
-} = require('../../middleware/utills');
-//const {  validateMeChecks, serving_zipcodes, CustomerSignInValidations, CustomerSignUpValidations, CustomerSubscriptionValidations, free_plates_discount_codes, RecurringBillingValidations } = require('../../middleware/utills');
+} = require('../../middleware/utils');
+//const {  validateMeChecks, serving_zipcodes, CustomerSignInValidations, CustomerSignUpValidations, CustomerSubscriptionValidations, free_plates_discount_codes, RecurringBillingValidations } = require('../../middleware/utils');
 const bcrypt = require('bcrypt');
 const rounds = 10;
 const stripe = require('stripe')(process.env.StripeSecretKey);
@@ -516,16 +516,16 @@ router.post(
             activePlan: activePlan,
             msg: `Active plan has ${
               subscription.total_plates_tobe_serverd - activePlanOrdersCount
-            } plates left.`,
+              } plates left.`,
           });
         }
       }
 
       //make subscription inactive
       let query = {
-          email: body.email,
-          stripe_subscription_id: activePlan[0].stripe_subscription_id,
-        },
+        email: body.email,
+        stripe_subscription_id: activePlan[0].stripe_subscription_id,
+      },
         update = {
           status: false,
         },
@@ -553,11 +553,13 @@ router.post(
 
       if (stripe_subscription.status != 'active') {
         //make plan inactive
+
         let query_3 = {
             email: body.email,
             stripe_plan_id: activePlan[0].stripe_plan_id,
           },
           update_3 = {
+
             status: false,
             status_reason: 'card declined.',
           },
@@ -590,13 +592,14 @@ router.post(
         free_plates: free_plates_discount.plates,
         freePlateCoupon_no: free_plates_discount.code,
         total_plates_tobe_serverd:
-          activePlan[0].plates + free_plates_discount.plates,
+         activePlan[0].plates + free_plates_discount.plates,
         // stripe_dicount_code : ,
         // discount_type : ,
         total_charged: stripe_subscription.plan.amount / 100,
       });
 
       await new_subscription.save();
+
 
       let query_sub = { email: body.email };
       let update_sub = { stripe_subscription_id: stripe_subscription.id };

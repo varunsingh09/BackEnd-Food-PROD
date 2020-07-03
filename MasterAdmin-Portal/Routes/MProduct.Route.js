@@ -10,7 +10,7 @@ var path = require('path');
 const { ProductSchema } = require('./../../MasterAdmin-Portal/Models/MProduct.model');
 const { ImagesSchema } = require('./../../MasterAdmin-Portal/Models/MImages.model');
 const { KitchenSignupSchema} = require('./../../Kitchen-Portal/Models/KSignup-model');
-const { upload,item_type,serving_temp,allergic_ingredients,special_markings} = require('./../../middleware/utills')
+const { upload,item_type,serving_temp,allergic_ingredients,special_markings} = require('./../../middleware/utils')
 const {CaptureErrorsSchema} = require('./../../Common-Model-Routes/Models/Error.model')
 
 //const { redisSetKey, client } = require('../redis')
@@ -173,7 +173,7 @@ router.get('/AllProducts', async function (req,res){
 
   ]);
 
-  console.log(products)
+ 
   return res.status(200).send({ "results": products })
 
   } catch (error) {
