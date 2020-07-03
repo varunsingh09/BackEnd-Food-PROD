@@ -101,21 +101,21 @@ router.post('/ZipcodeKitchens', async (req, res, next) => {
 
 
 
-router.post('/ZipcodeKitchensList', async (req, res, next) => {
+router.get('/ZipcodeKitchens', async (req, res, next) => {
 
 
-    let kitchen_names = typeof req.body.kitchen_names === "object" ? req.body.kitchen_names.map(String) : req.body.kitchen_names
+    let kitchen_names = typeof req.params.kitchen_names === "object" ? req.params.kitchen_names.map(String) : req.params.kitchen_names
 
-    let state = req.body.state
+    let state = req.params.state
 
     //console.log("body request ",req.body)
 
     const match = {}
-    if (req.body.state !== undefined) {
-        match.state = req.body.state
+    if (req.params.state !== undefined) {
+        match.state = req.params.state
     }
     if (req.body.zipcode !== undefined) {
-        match.zipcodes = { "$in": req.body.zipcode }
+        match.zipcodes = { "$in": req.params.zipcode }
     }
 
     console.log("=========>", match)
