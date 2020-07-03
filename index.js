@@ -12,23 +12,23 @@ var path = require('path');
 const fs = require('fs');
 
 // capturing log in access file with morgan
-const acessLogStream = fs. createWriteStream (
-  path.join(__dirname,'access.log'),
-  { flags:'a'}
+const acessLogStream = fs.createWriteStream(
+  path.join(__dirname, 'access.log'),
+  { flags: 'a' }
 );
 
 // add comment from github
 // testing organization git
 
 require("./utils/db");
-
 app.use(cors()); // cors is for cross origin resources for issue with front end backend ports
+app.use(morgan("dev", { stream: acessLogStream }));
+app.use(bodyParser.json());
+
 //Helmet header security
 app.use(helmet.xssFilter())
 app.use(helmet.frameguard())
 // End here
-app.use(morgan("dev",{ stream: acessLogStream } ));
-app.use(bodyParser.json());
 
 // asset compresssion for zipping files 
 app.use(compression())
@@ -42,8 +42,6 @@ app.use(cookieSession({
     process.env.COOKIE_KEY2
   ]
 }))
-
-
 
 // Master Admin Signup API Route // This is new structure
 const MSignUp = require("./MasterAdmin-Portal/Routes/MSignup-route");
