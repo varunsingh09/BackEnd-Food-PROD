@@ -108,7 +108,7 @@ router.get('/ZipcodeKitchens', async (req, res, next) => {
 
     let state = req.params.state
 
-    //console.log("body request ",req.body)
+    console.log("body request ",req.body)
 
     const match = {}
     if (req.params.state !== undefined) {
