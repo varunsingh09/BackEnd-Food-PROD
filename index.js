@@ -112,7 +112,7 @@ app.use("/StateCities", StateCity);
 // Get - /StateCities/readJsonFile
 // Get - /StateCities/AllStateCity
 
-// Zipcode & Kicthens API route [this will tell which kicthens are serving which zipcodes]
+// Zipcode & kitchen API route [this will tell which kitchen are serving which zipcodes]
 const ZipcodeKitchen = require("./MasterAdmin-Portal/Routes/MZipcode-Kitchen.Route");
 app.use("/ZipcodesKitchens", ZipcodeKitchen);
 // Post  - /ZipcodesKitchens/ZipcodeKitchens
@@ -120,10 +120,10 @@ app.use("/ZipcodesKitchens", ZipcodeKitchen);
 /// -------------------------------------------------------///
 
 
-// we capture all errors and save it to datbase collection ,[Date ,error type, IP address ]
-//if datbase is down then when its up it should save that to database collection .
+// we capture all errors and save it to database collection ,[Date ,error type, IP address ]
+//if database is down then when its up it should save that to database collection .
 
-//This below code is to display error if anyone typed wrongURL extenstion
+//This below code is to display error if anyone typed wrongURL extension
 
 app.use((req, res, next) => {
   const error = new Error("We think you are lost,you may typed wrong URL!");
