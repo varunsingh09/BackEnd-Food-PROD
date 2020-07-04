@@ -2,7 +2,13 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
-const PORT = process.env.PORT || 3001;
+var chalk = require('chalk');
+var connected = chalk.bold.yellowBright;
+
+//Loding Globale app configuration
+const config = require('./config/config.js');
+// End Here
+
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const cookieSession = require('cookie-session')
@@ -113,7 +119,7 @@ app.use("/ZipcodesKitchens", ZipcodeKitchen);
 
 /// -------------------------------------------------------///
 
-// Asif bhai  = Pls add logic to below code as mentioned in WORKITEM
+
 // we capture all errors and save it to datbase collection ,[Date ,error type, IP address ]
 //if datbase is down then when its up it should save that to database collection .
 
@@ -135,6 +141,6 @@ app.use((error, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`));
+app.listen(global.gConfig.port, () => console.log(connected(`${global.gConfig.app_name} listening on port ${global.gConfig.port}`)))
 
 module.exports = app;
