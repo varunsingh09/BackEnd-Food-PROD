@@ -104,22 +104,22 @@ router.post('/ZipcodeKitchens', async (req, res, next) => {
 router.get('/ZipcodeKitchens', async (req, res, next) => {
 
 
-    let kitchen_names = typeof req.params.kitchen_names === "object" ? req.params.kitchen_names.map(String) : req.params.kitchen_names
+    let kitchen_names = typeof req.query.kitchen_names === "object" ? req.query.kitchen_names.map(String) : req.query.kitchen_names
 
-    let state = req.params.state
+    let state = req.query.state
 
-    console.log("body request ",req.body)
+    console.log("request params ", req.query)
 
     const match = {}
-    if (req.params.state !== undefined) {
-        match.state = req.params.state
+    if (req.query.state !== undefined) {
+        match.state = req.query.state
     }
     if (req.body.zipcode !== undefined) {
-        match.zipcodes = { "$in": req.params.zipcode }
+        match.zipcodes = { "$in": req.query.zipcode }
     }
 
     console.log("=========>", match)
-    
+
     let product = await ProductSchema.count({ kitchen_name: kitchen_names });
 
     if (product === 0) {
