@@ -36,12 +36,13 @@ const accessLogStream = fs.createWriteStream(
 require("./utils/db");
 app.use(cors()); // cors is for cross origin resources for issue with front end backend ports
 app.use(morgan("dev", { stream: accessLogStream }));
-app.use(bodyParser.json());
 
 //Helmet header security
 app.use(helmet.xssFilter())
 app.use(helmet.frameguard())
 // End here
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 // asset compression for zipping files 
 app.use(compression())
