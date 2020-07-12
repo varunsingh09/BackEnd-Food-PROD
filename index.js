@@ -23,6 +23,7 @@ var path = require('path');
 
 const fs = require('fs');
 
+//All api urls endpoints
 const routes = require("./routes/index.js");
 
 // capturing log in access file with morgan
