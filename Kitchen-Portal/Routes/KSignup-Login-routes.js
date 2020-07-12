@@ -176,7 +176,7 @@ router.post('/KitchenSignInLogout', async (req, res, next) => {
 
 
 router.post('/KitchenLogin', CustomerSignInValidations, async (req, res, next) => {
-    console.log(req.body)
+    console.log("======",req.body)
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {

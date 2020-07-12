@@ -1,0 +1,28 @@
+{
+    "development": {
+        "config_id": "development",
+        "app_name": "FoodApp Development",
+        "app_desc": "my app desc",
+        "port": 3001,
+        "json_indentation": 4,
+        "REDIS_PORT_WITH_URL": 6379,
+        "DatabaseIkram": "mongodb+srv://varun09:varun@123@cluster0-gvj4f.mongodb.net/test?retryWrites=true&w=majority"
+    },
+    "testing": {
+        "config_id": "testing",
+        "REDIS_PORT_WITH_URL": 6379,
+        "DatabaseIkram": "mongodb+srv://varun09:varun@123@cluster0-gvj4f.mongodb.net/test?retryWrites=true&w=majority"
+    },
+    "staging": {
+        "config_id": "staging",
+        "port": 3002,
+        "REDIS_PORT_WITH_URL": 6379,
+        "DatabaseIkram": "mongodb+srv://varun09:varun@123@cluster0-gvj4f.mongodb.net/test?retryWrites=true&w=majority"
+    },
+    "production": {
+        "config_id": "production",
+        "port": 3003,
+        "REDIS_PORT_WITH_URL": 6379,
+        "DatabaseIkram": "mongodb+srv://varun09:varun@123@cluster0-gvj4f.mongodb.net/test?retryWrites=true&w=majority"
+    }
+}
